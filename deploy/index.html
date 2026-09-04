@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#FFFFFF">
+<title>e24</title>
+<link rel="stylesheet" href="ds/tokens/fonts.css">
+<link rel="stylesheet" href="ds/tokens/colors.css">
+<link rel="stylesheet" href="ds/tokens/typography.css">
+<link rel="stylesheet" href="ds/tokens/spacing.css">
+<link rel="stylesheet" href="ds/tokens/shape.css">
+<link rel="stylesheet" href="ds/tokens/motion.css">
+<link rel="stylesheet" href="ds/tokens/base.css">
+<link rel="stylesheet" href="ds/styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="e24-shell.css">
+<link rel="stylesheet" href="e24-auth.css">
+<link rel="stylesheet" href="e24-payment.css">
+<link rel="stylesheet" href="e24-checkout.css">
+<link rel="stylesheet" href="e24-home-v2.css">
+<link rel="stylesheet" href="e24-contact.css">
+<link rel="stylesheet" href="e24-states.css">
+<style>
+body{gap:0}
+.stage{display:flex;align-items:center;gap:30px}
+.legend{width:230px;display:flex;flex-direction:column;gap:14px;font-family:var(--font-sans)}
+.legend h1{font-family:var(--font-serif-display);font-size:24px;font-weight:500;letter-spacing:.005em;color:#232420;margin:0}
+.legend p{font-size:13px;line-height:1.6;color:#5C5E55;margin:0}
+.legend ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;font-size:12.5px;line-height:1.5;color:#5C5E55}
+.legend .hint{font-family:var(--font-label);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8D8F84}
+.legend button{all:unset;cursor:pointer;align-self:flex-start;padding:9px 16px;border-radius:999px;border:1px solid #CFCCC2;font-size:13px;color:#232420;transition:all 120ms cubic-bezier(.2,.6,.25,1)}
+.legend button:hover{border-color:var(--sage-500);color:var(--sage-600)}
+.gstage{position:fixed;inset:0;overflow:auto;display:flex;flex-direction:column;gap:18px;padding:28px 30px;background:#F2F0EA}
+.gback{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:4px;align-self:flex-start;font-family:var(--font-sans);font-size:13px;color:#5C5E55}
+.gback:hover{color:var(--sage-600)}
+/* Live build: no desktop canvas, no device frame — the app fills the viewport. */
+html,body{height:100%}
+body{margin:0;padding:0;background:#FFFFFF;display:block}
+.stage{display:block;gap:0}
+.phone{width:100%;height:100vh;height:100dvh;max-height:none;border:0;border-radius:0;box-shadow:none}
+.statusbar{display:none}
+.nav{bottom:calc(14px + env(safe-area-inset-bottom))}
+.phone.hasnav .scroll{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
+.footer,.authfoot{padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+.gstage{padding:20px 16px}
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="ds/_ds_bundle.js"></script>
+<script src="e24-hr-1.js"></script>
+<script src="e24-hr-2.js"></script>
+<script src="e24-hr-3.js"></script>
+<script src="e24-hr-4.js"></script>
+<script src="e24-i18n.js"></script>
+<script src="image-slot.js"></script>
+<script type="text/babel" src="e24-shell.jsx"></script>
+<script type="text/babel" src="e24-checkout.jsx"></script>
+<script type="text/babel" src="e24-screens.jsx"></script>
+<script type="text/babel" src="e24-home-v2.jsx"></script>
+<script type="text/babel" src="e24-profile.jsx"></script>
+<script type="text/babel" src="e24-address.jsx"></script>
+<script type="text/babel" src="e24-auth.jsx"></script>
+<script type="text/babel" src="e24-account.jsx"></script>
+<script type="text/babel" src="e24-payment.jsx"></script>
+<script type="text/babel" src="e24-contact.jsx"></script>
+<script type="text/babel" src="e24-states.jsx"></script>
+<script type="text/babel" src="e24-gallery.jsx"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#035C67">
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="800" fill="#035C67"/><g fill="#FDFBF7"><rect x="520" y="300" width="90" height="200" rx="34"/><rect x="470" y="350" width="190" height="90" rx="34"/><rect x="590" y="360" width="90" height="180" rx="34"/></g><text x="600" y="640" font-family="Georgia, serif" font-size="72" fill="#FDFBF7" text-anchor="middle">e24</text></svg>
+</template>
+<div id="e24-app"></div>
+<script type="text/babel">
+const KEY = 'e24-proto-route';
+const TABS = ['home','shop','card','points','profile'];
+
+const STUBS = {
+  terms: { title:'Terms of use', icon:'file-text', body:'Legal text, supplied by the client.' },
+  privacy: { title:'Privacy policy', icon:'shield-lock', body:'Legal text, supplied by the client.' },
+  security: { title:'Security & sign-in', icon:'lock', body:'Change password, biometric unlock and active sessions. Not designed yet.' },
+  licences: { title:'Open source licences', icon:'license', body:'React, Tabler Icons and the other libraries this app is built on, with their licence texts.' },
+  about: { title:'About', icon:'info-circle', body:'e24 by Ljekarne Švaljek. Version 1.0. Licences and credits.' }
+};
+
+function App() {
+  const [stack, setStack] = React.useState(() => {
+    try { const s = JSON.parse(localStorage.getItem(KEY)); return Array.isArray(s) && s.length ? s : ['home']; } catch (e) { return ['home']; }
+  });
+  React.useEffect(()=>{ localStorage.setItem(KEY, JSON.stringify(stack)); }, [stack]);
+  const route = stack[stack.length-1];
+  const nav = React.useMemo(()=>({
+    route,
+    go: r => setStack(s => [...s, r]),
+    back: () => setStack(s => s.length > 1 ? s.slice(0,-1) : s),
+    tab: r => setStack([r]),
+    set: arr => setStack(arr)
+  }), [route]);
+
+  const [resetEmail, setResetEmail] = React.useState('');
+  const screen = () => {
+    if (route === 'splash') return <SplashScreen onDone={()=>{
+      // A1: the splash decides where the app opens
+      const session = localStorage.getItem('e24-session');
+      nav.set([session === 'active' ? 'home' : session === 'expired' ? 'login' : 'onboarding']);
+    }} />;
+    if (route === 'onboarding') return <OnboardingScreen onSkip={()=>{localStorage.setItem('e24-session','guest');nav.set(['home']);}} onLogin={()=>nav.go('login')} onSignup={()=>nav.go('signup')} />;
+    if (route === 'login') return <LoginScreen onBack={nav.back} onForgot={()=>nav.go('forgot')} onSignup={()=>nav.go('signup')} onDone={()=>{localStorage.setItem('e24-session','active');nav.set(['home']);}} />;
+    if (route === 'signup') return <SignupScreen onBack={nav.back} onLogin={()=>nav.go('login')} onLegal={r=>nav.go(r === 'notifications' ? 'notifications' : r)} onDone={()=>nav.go('verify')} />;
+    if (route === 'verify') return <VerifyEmailScreen onVerified={()=>{AccountStore.set(true);nav.set(['welcome']);}} onSkip={()=>{AccountStore.set(false);nav.set(['home']);}} onChange={nav.back} />;
+    if (route === 'welcome') return <WelcomeBonusScreen onDone={()=>{localStorage.setItem('e24-session','active');nav.set(['home']);}} />;
+    if (route === 'notifications') return <NotificationSettingsScreen />;
+    if (route === 'notifications-denied') return <NotificationSettingsScreen denied />;
+    if (route === 'forgot') return <ForgotScreen onBack={nav.back} onSent={e=>{setResetEmail(e);nav.go('reset-sent');}} />;
+    if (route === 'reset-sent') return <ResetSentScreen email={resetEmail} onBack={nav.back} onOpen={()=>nav.go('new-password')} />;
+    if (route === 'new-password') return <NewPasswordScreen onBack={nav.back} onDone={()=>nav.set(['home'])} />;
+    if (route === 'home') return <HomeScreenV2 />;
+    if (route === 'shop') return <ShopScreen />;
+    if (route === 'search') return <ShopScreen openSearch />;
+    if (route.startsWith('shop:')) return <ShopScreen initialFilter={route.slice(5)} />;
+    if (route.startsWith('q:')) return <ShopScreen initialQuery={route.slice(2)} />;
+    if (route.startsWith('coll:')) return <ShopScreen collection={route.slice(5)} />;
+    if (route.startsWith('sub:')) { const [c, sc] = route.slice(4).split('|'); return <ShopScreen category={c} subcategory={sc} />; }
+    if (route.startsWith('cat:')) return <ShopScreen category={route.slice(4)} />;
+    if (route.startsWith('group:')) return <ShopScreen group={route.slice(6)} />;
+    if (route === 'card') return <CardScreen />;
+    if (route === 'points') return <PointsScreen />;
+    if (route === 'profile') return <ProfileScreen />;
+    if (route === 'history') return <PointsHistoryScreen />;
+    if (route === 'orders') return <OrdersScreen />;
+    if (route.startsWith('order:')) return <OrderDetailScreen id={route.slice(6)} />;
+    if (route === 'personal') return <PersonalDetailsScreen />;
+    if (route === 'consents') return <ConsentsScreen />;
+    if (route === 'faq') return <FaqScreen />;
+    if (route === 'addresses') return <AddressesScreen />;
+    if (route === 'cards') return <PaymentMethodsScreen />;
+    if (route === 'locker') return <LockerScreen />;
+    if (route.startsWith('shopflow')) return <CheckoutFlow product={route.split(':')[1]} onExit={nav.back} />;
+    if (route === 'cart') return <CheckoutFlow start={1} onExit={nav.back} />;
+    if (route === 'security') return <SecurityScreen />;
+    if (route === 'about') return <AboutScreen />;
+    if (route === 'contact') return <ContactScreen />;
+    if (route === 'contact-sent') return <ContactSentScreen />;
+    if (STUBS[route]) return <SimpleScreen {...STUBS[route]} />;
+    return <HomeScreenV2 />;
+  };
+
+  const GALLERIES = { 'g-push': PushGallery, 'g-states': StatesGallery, 'g-review': ReviewGallery, 'g-guest': GuestGallery };
+  if (GALLERIES[route]) {
+    const G = GALLERIES[route];
+    return (
+      <NavCtx.Provider value={nav}>
+        <div className="gstage">
+          <button className="gback" onClick={()=>nav.tab('home')}><i className="ti ti-chevron-left"></i>Back to the prototype</button>
+          <G />
+        </div>
+      </NavCtx.Provider>
+    );
+  }
+  return (
+    <NavCtx.Provider value={nav}>
+      <div className="stage">
+        <React.Fragment key={route}>{screen()}</React.Fragment>
+      </div>
+    </NavCtx.Provider>
+  );
+}
+ReactDOM.createRoot(document.getElementById('e24-app')).render(<App />);
+</script>
+</body>
+</html>

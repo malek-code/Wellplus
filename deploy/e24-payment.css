@@ -1,0 +1,26 @@
+.copyrow{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border-hairline)}
+.copyrow:last-child{border-bottom:0}
+.copyrow .l{flex:0 0 84px;font-family:var(--font-label);font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint)}
+.copyrow .v{flex:1;min-width:0;font-size:13.5px;color:var(--text-body);word-break:break-word;line-height:1.45}
+.copyrow button{all:unset;cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:999px;color:var(--text-faint);transition:background var(--dur-fast) var(--ease-standard),color var(--dur-fast) var(--ease-standard)}
+.copyrow button:hover{background:rgba(35,36,32,.05);color:var(--text-brand)}
+.copyrow button i{font-size:17px}
+
+.bankhead{display:flex;align-items:flex-start;gap:14px;padding:2px 0 4px}
+.bankhead .glyph{flex:none;width:46px;height:46px;border-radius:999px;background:var(--surface-brand-quiet);display:flex;align-items:center;justify-content:center;color:var(--sage-600)}
+.bankhead .glyph i{font-size:22px}
+.amt3ds{font-family:var(--font-numeric);font-size:30px;font-weight:500;line-height:1.1;font-variant-numeric:tabular-nums;color:var(--text-body);margin-top:2px}
+
+.codeboxes{position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.codeboxes span{height:54px;border:1px solid var(--border-strong,#C2BFB4);border-radius:12px;background:var(--surface-card);display:flex;align-items:center;justify-content:center;font-family:var(--font-numeric);font-size:22px;font-variant-numeric:tabular-nums;color:var(--text-body);transition:border-color var(--dur-fast) var(--ease-standard)}
+.codeboxes span[data-filled="true"]{border-color:var(--sage-500)}
+.codeboxes[data-invalid="true"] span{border-color:var(--status-negative)}
+.codeboxes input{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;background:transparent;font-size:16px;letter-spacing:1em;cursor:text}
+
+.paysel{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid var(--border-hairline);border-radius:16px;background:var(--surface-card)}
+.paysel i.lead{font-size:20px;color:var(--sage-500)}
+.paysel .txt{flex:1;min-width:0}
+.paysel .txt .t{font-size:13.5px;font-weight:500;color:var(--text-body)}
+.paysel .txt .s{font-size:12px;color:var(--text-faint);margin-top:2px}
+.paysel .chg{all:unset;cursor:pointer;flex:none;font-size:13px;color:var(--text-brand);text-decoration:underline;text-underline-offset:3px}
+.paysel .chg:hover{color:var(--sage-900)}

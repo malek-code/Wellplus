@@ -1,0 +1,25 @@
+.ctcard{display:flex;flex-direction:column}
+.ctrow{all:unset;cursor:pointer;box-sizing:border-box;text-decoration:none;display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--border-hairline);color:var(--text-body)}
+.ctrow:last-child{border-bottom:0;padding-bottom:0}
+.ctrow:first-child{padding-top:0}
+.ctrow>i:first-child{font-size:19px;color:var(--sage-500);flex:none}
+.ctrow .txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;text-align:left}
+.ctrow .txt b{font-size:14px;font-weight:600;line-height:1.35}
+.ctrow .txt span{font-size:12px;line-height:1.45;color:var(--text-faint)}
+.ctrow>i:last-child{font-size:16px;color:var(--text-faint);flex:none}
+.ctrow:hover .txt b{color:var(--sage-600)}
+.topics{display:flex;flex-wrap:wrap;gap:8px}
+.topicchip{all:unset;cursor:pointer;box-sizing:border-box;padding:8px 14px;border-radius:999px;border:1px solid rgba(35,36,32,.18);font-family:var(--font-ui);font-size:13px;line-height:1;color:var(--text-secondary);transition:all var(--dur-fast,120ms) var(--ease-standard,cubic-bezier(.2,.6,.25,1))}
+.topicchip:hover{border-color:var(--sage-500);color:var(--sage-600)}
+.topicchip[aria-pressed="true"]{background:var(--sage-500);border-color:var(--sage-500);color:#FDFBF7}
+.topics[data-invalid="true"] .topicchip{border-color:var(--status-negative)}
+.afield textarea{all:unset;box-sizing:border-box;width:100%;min-height:118px;padding:12px 0;font-family:var(--font-ui);font-size:15px;line-height:1.55;color:var(--text-body);resize:none}
+.afield textarea::placeholder{color:var(--text-faint)}
+.afield .wrap.multiline{align-items:stretch}
+.counter{display:flex;justify-content:space-between;gap:10px;font-family:var(--font-label);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint)}
+.sentwrap{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:26px 4px 8px}
+.sentmark{width:64px;height:64px;border-radius:50%;background:var(--surface-brand-quiet);display:flex;align-items:center;justify-content:center}
+.sentmark i{font-size:30px;color:var(--sage-500)}
+.sentwrap h3{font-family:var(--font-serif-display);font-size:22px;font-weight:500;line-height:1.25;color:var(--text-body);margin:0}
+.sentwrap p{font-size:13.5px;line-height:1.6;color:var(--text-secondary);margin:0;text-wrap:pretty}
+.ticket{font-family:var(--font-label);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint)}

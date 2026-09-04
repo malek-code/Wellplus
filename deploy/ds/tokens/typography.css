@@ -1,0 +1,29 @@
+:root{
+--font-sans:"Archivo","Helvetica Neue",Helvetica,sans-serif;
+--font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+--font-serif-display:"Newsreader",Georgia,serif;
+/* Roles */
+--font-ui:var(--font-sans);
+--font-numeric:var(--font-sans);
+--font-label:var(--font-mono);
+--font-club:var(--font-serif-display);
+/* Sizes — lifted from the wireframe source, unrounded */
+--size-points:30px;--size-points-sm:22px;--size-points-xs:18px;
+--size-lead:20px;--size-total:17px;--size-title:16px;--size-button:15px;
+--size-row-title:14px;--size-body:13.5px;--size-meta:13px;--size-label:12.5px;
+--size-section:12px;--size-tiny:11.5px;--size-chip:11px;--size-micro:10.5px;
+/* Weights */
+--weight-regular:400;--weight-medium:500;--weight-semibold:600;--weight-bold:700;
+/* Line heights */
+--leading-tight:1.2;--leading-snug:1.35;--leading-body:1.5;--leading-loose:1.7;
+/* Tracking */
+--tracking-points:-0.02em;--tracking-lead:-0.015em;--tracking-title:-0.01em;--tracking-label:0.08em;--tracking-chip:0.02em;
+}
+/* Composed text styles */
+.e24-points{font-family:var(--font-numeric);font-size:var(--size-points);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-points);font-variant-numeric:tabular-nums;color:var(--text-body)}
+.e24-lead{font-family:var(--font-ui);font-size:var(--size-lead);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-lead);line-height:var(--leading-snug);text-wrap:balance;color:var(--text-body)}
+.e24-title{font-family:var(--font-ui);font-size:var(--size-title);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-title);color:var(--text-body)}
+.e24-body{font-family:var(--font-ui);font-size:var(--size-body);line-height:var(--leading-body);color:var(--text-secondary)}
+.e24-section{font-family:var(--font-label);font-size:var(--size-section);text-transform:uppercase;letter-spacing:var(--tracking-label);font-weight:var(--weight-medium);color:var(--text-muted)}
+.e24-tiny{font-family:var(--font-ui);font-size:var(--size-tiny);color:var(--text-muted);line-height:var(--leading-body)}
+.e24-club{font-family:var(--font-club);font-weight:400;letter-spacing:0.01em;color:var(--text-brand)}

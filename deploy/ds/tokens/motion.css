@@ -1,0 +1,12 @@
+:root{
+--ease-standard:cubic-bezier(.2,.6,.25,1); /* @kind other */
+--ease-exit:cubic-bezier(.4,0,1,1); /* @kind other */
+--dur-fast:120ms; /* @kind other */
+--dur-base:180ms; /* @kind other */
+--dur-sheet:220ms; /* @kind other */
+--dur-skeleton:1300ms; /* @kind other */
+--press-scale:0.985; /* @kind other */
+--hover-tint:rgba(35,36,32,.04);
+--blur-scrim:blur(2px); /* @kind other */
+}
+@media (prefers-reduced-motion:reduce){:root{--dur-fast:0ms; /* @kind other */ --dur-base:0ms; /* @kind other */ --dur-sheet:0ms /* @kind other */}}

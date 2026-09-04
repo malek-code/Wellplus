@@ -1,0 +1,9 @@
+/* e24 / WellPlus webfonts.
+   No font binaries were supplied with the source material (the wireframes used the
+   system sans stack), so the families below are chosen for this design system and
+   served from Google Fonts. Swap the @import for self-hosted @font-face rules once
+   licensed files exist. */
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap");
+/* Iconography: Tabler — the set the source wireframes inlined by hand. Loaded as the
+   official webfont so glyphs are genuine rather than redrawn. Usage: <i class="ti ti-home">. */
+@import url("https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css");
