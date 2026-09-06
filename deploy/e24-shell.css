@@ -421,3 +421,20 @@ div:has(> div > .infosheet){background:#FFFFFF !important;inset:auto 0 0 0 !impo
 .swrow .t{display:block;font-size:14px;font-weight:600;color:var(--text-body)}
 .swrow .s{display:block;font-size:12px;line-height:1.5;color:var(--text-faint);margin-top:3px;text-wrap:pretty}
 .swrow[data-off="true"] .t,.swrow[data-off="true"] .s{color:var(--text-faint)}
+
+.ptsbox{border:1px solid var(--border-hairline);border-radius:20px;padding:15px 18px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px}
+.ptsbox .ptsleft{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ptsbox .lbl{font-size:13px;letter-spacing:0;text-transform:none;color:var(--text-secondary)}
+.ptsbox .num{font-family:var(--font-numeric);font-size:44px;line-height:.95;font-weight:500;letter-spacing:.01em;font-variant-numeric:tabular-nums;color:var(--text-body)}
+.ptsbox .eur{flex:none;margin-left:auto;text-align:right;padding-bottom:3px;font-family:var(--font-numeric);font-size:15px;letter-spacing:.01em;color:var(--text-brand)}
+.ptsbox .range{background:rgba(35,36,32,.1)}
+.ptsbox .range .fill{background:var(--sage-500)}
+.ptsbox .range .tick{background:rgba(35,36,32,.32)}
+.ptsbox .range .marker{background:#FFFFFF;border:2px solid var(--sage-500)}
+.ptsbox .scale{color:var(--text-faint)}
+
+.ptsbare{display:flex;flex-direction:column;gap:6px;padding:2px 2px 0}
+.ptsbare .lbl{font-family:var(--font-label);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint)}
+.ptsbare .figs{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.ptsbare .num{font-family:var(--font-numeric);font-size:48px;line-height:1;font-weight:500;letter-spacing:.01em;font-variant-numeric:tabular-nums;color:var(--text-body)}
+.ptsbare .eur{font-family:var(--font-numeric);font-size:15px;letter-spacing:.01em;color:var(--text-brand)}

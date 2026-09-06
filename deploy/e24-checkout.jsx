@@ -133,11 +133,13 @@ function Footer({ label, amount, cta, onClick, disabled, note, phase }) {
   const busy = phase === 'loading', done = phase === 'done';
   return (
     <div className="footer">
-      {amount != null ? <div className="totals"><span className="lbl">{label}</span><span className="amt">{eur(amount)}</span></div> : null}
       {note ? <p className="tiny" style={{margin:0}}>{note}</p> : null}
-      <button className="cta" onClick={onClick} disabled={disabled || busy || done} data-phase={phase || 'idle'}>
-        {busy ? <><span className="spin"></span>Adding</> : done ? <>Added<i className="ti ti-check" style={{fontSize:18}}></i></> : <>{cta}<i className="ti ti-arrow-right" style={{fontSize:18}}></i></>}
-      </button>
+      <div className="footrow">
+        {amount != null ? <div className="totals"><span className="lbl">{label}</span><span className="amt">{eur(amount)}</span></div> : null}
+        <button className="cta" onClick={onClick} disabled={disabled || busy || done} data-phase={phase || 'idle'}>
+          {busy ? <><span className="spin"></span>Adding</> : done ? <>Added<i className="ti ti-check" style={{fontSize:18}}></i></> : <>{cta}<i className="ti ti-arrow-right" style={{fontSize:18}}></i></>}
+        </button>
+      </div>
     </div>
   );
 }
@@ -228,13 +230,13 @@ function StepProduct({ qty, setQty, main, go, back }) {
   );
 }
 
-function StepCart({ qty, setQty, magQty, setMagQty, main, steps, go, back }) {
+function StepCart({ qty, setQty, magQty, setMagQty, main, steps, total, go, back }) {
   const nav = useNav();
   const second = main === CATALOG.calmag ? CATALOG.esterc : CATALOG.calmag;
   const sub = main.price*qty + second.price*magQty;
   const rows = [[main,qty,setQty],[second,magQty,setMagQty]].filter(([,q])=>q>0);
   return (
-    <Shell title="Cart" steps={steps} onBack={back} footer={<Footer label="Subtotal" amount={sub} cta="Checkout" onClick={go} disabled={!qty && !magQty} />}>
+    <Shell title="Cart" steps={steps} onBack={back} footer={<Footer label="Total" amount={total} cta="Checkout" onClick={go} disabled={!qty && !magQty} />}>
       <div className="card">
         <div className="clines">
           {rows.map(([p,q,set],i)=>(
@@ -283,7 +285,7 @@ function StepCart({ qty, setQty, magQty, setMagQty, main, steps, go, back }) {
   );
 }
 
-function StepDelivery({ value, onChange, address, addresses, locker, onPickLocker, go, back }) {
+function StepDelivery({ value, onChange, address, addresses, locker, onPickLocker, total, go, back }) {
   const sel = DELIVERY.find(d => d.id === value);
   const addr = (addresses || ADDRESSES).find(a => a.id === address);
   const needsLocker = isLocker(value) && !locker;
@@ -295,7 +297,7 @@ function StepDelivery({ value, onChange, address, addresses, locker, onPickLocke
     </Shell>
   );
   return (
-    <Shell title="Delivery" stepIndex={1} steps={STEPS} onBack={back} footer={<Footer label="Delivery" amount={sel.price} cta={needsLocker ? 'Choose a locker' : 'Continue to payment'} onClick={needsLocker ? onPickLocker : go} />}>
+    <Shell title="Delivery" stepIndex={1} steps={STEPS} onBack={back} footer={<Footer label="Total" amount={total} cta={needsLocker ? 'Choose a locker' : 'Continue'} onClick={needsLocker ? onPickLocker : go} />}>
       <SecLabel>How would you like to receive it</SecLabel>
       <p className="tiny" style={{marginTop:-4}}>Prices are for {addr.s.split('\n')[0]}.</p>
       <Options items={DELIVERY} value={value} onChange={onChange} priced />
@@ -314,9 +316,9 @@ function StepDelivery({ value, onChange, address, addresses, locker, onPickLocke
   );
 }
 
-function StepAddress({ address, addresses, onAddress, onAdd, go, back }) {
+function StepAddress({ address, addresses, onAddress, onAdd, total, go, back }) {
   return (
-    <Shell title="Address" stepIndex={0} steps={STEPS} onBack={back} footer={<Footer cta="Continue to delivery" onClick={go} disabled={!address} />}>
+    <Shell title="Address" stepIndex={0} steps={STEPS} onBack={back} footer={<Footer label="Total" amount={total} cta="Continue" onClick={go} disabled={!address} />}>
       <SecLabel>Deliver to</SecLabel>
       <Options items={addresses} value={address} onChange={onAddress} />
       <button className="ghostbtn" onClick={onAdd}><i className="ti ti-plus" style={{fontSize:16}}></i>Add a new address</button>
@@ -325,10 +327,10 @@ function StepAddress({ address, addresses, onAddress, onAdd, go, back }) {
   );
 }
 
-function StepPayment({ value, onChange, wallet, onWallet, redeem, setRedeem, card, onCards, go, back }) {
+function StepPayment({ value, onChange, wallet, onWallet, redeem, setRedeem, card, onCards, total, go, back }) {
   const pick = id => { onChange(id); if (id === 'bank') setRedeem(false); };
   return (
-    <Shell title="Payment" stepIndex={2} steps={STEPS} onBack={back} footer={<Footer cta="Review order" onClick={go} disabled={value === 'card' && !card} />}>
+    <Shell title="Payment" stepIndex={2} steps={STEPS} onBack={back} footer={<Footer label="Total" amount={total} cta="Continue" onClick={go} disabled={value === 'card' && !card} />}>
       <SecLabel>Payment method</SecLabel>
       <div className="paylist">
         {PAYMENT.map(m=>{
@@ -399,7 +401,7 @@ function StepReview({ qty, magQty, main, delivery, redeem, setRedeem, address, a
   const [code, setCode] = React.useState('');
   const nothingToPay = total <= 0.001;
   return (
-    <Shell title="Review" stepIndex={3} steps={STEPS} onBack={back} footer={<Footer label="Total" amount={total} cta={nothingToPay ? 'Confirm order' : 'Place order'} onClick={go} disabled={!terms} note={!terms ? 'Accept the terms of use to continue' : nothingToPay ? 'Covered by points — nothing to charge' : redeem ? `${pts(usedPts)} points used · this order earns none` : `You'll earn ${earned} points`} />}>
+    <Shell title="Review" stepIndex={3} steps={STEPS} onBack={back} footer={<Footer label="Total" amount={total} cta={nothingToPay ? 'Confirm order' : 'Place order'} onClick={go} disabled={!terms} />}>
       {redeemDropped ? <StateBanner icon="alert-circle" title="Your points were taken off this order">Bank transfer cannot be combined with a redemption, so the €{'\u00A0'}discount was removed when you changed the payment method. Switch back to card or a wallet to use the points again.</StateBanner> : null}
       <div className="switchrow" data-off={blocked ? 'true' : undefined}>
         <div style={{position:'relative',flex:1,minWidth:0}}>
@@ -461,7 +463,6 @@ function StepReview({ qty, magQty, main, delivery, redeem, setRedeem, address, a
         <input type="checkbox" checked={terms} onChange={e=>setTerms(e.target.checked)} />
         <span>I confirm I have read the <a href="#terms" onClick={e=>{e.preventDefault();}}>terms of use</a> and wish to continue with the order.</span>
       </label>
-      <p className="tiny">Points from this order appear once the pharmacy confirms it.</p>
     </Shell>
   );
 }
@@ -538,8 +539,6 @@ function CheckoutFlow({ start = 0, fixed, initial = {}, product, balance, droppe
   const placed = React.useRef(null);
   const [redeemDropped, setRedeemDropped] = React.useState(!!dropped);
   const goStep = n => { setRedeemDropped(false); setI(n); };
-  const common = { qty, setQty, magQty, setMagQty, main, steps: stepsFor(delivery), go, back, goStep };
-
   const totals = () => {
     const second = main === CATALOG.calmag ? CATALOG.esterc : CATALOG.calmag;
     const items = main.price*qty + second.price*magQty;
@@ -547,6 +546,8 @@ function CheckoutFlow({ start = 0, fixed, initial = {}, product, balance, droppe
     const credit = redeem ? Math.min(CREDIT, items) : 0;
     return { second, items, ship, credit, total: items + ship - credit };
   };
+
+  const common = { qty, setQty, magQty, setMagQty, main, steps: stepsFor(delivery), go, back, goStep, total: totals().total };
 
   const commit = () => {
     const second = main === CATALOG.calmag ? CATALOG.esterc : CATALOG.calmag;
@@ -579,9 +580,9 @@ function CheckoutFlow({ start = 0, fixed, initial = {}, product, balance, droppe
   const stepScreen = () => {
     if (step === 0) return <StepProduct {...common} />;
     if (step === 1) return <StepCart {...common} />;
-    if (step === 2) return <StepAddress address={address} addresses={addresses} onAddress={setAddress} onAdd={()=>setSub('newaddress')} go={go} back={back} />;
-    if (step === 3) return <StepDelivery value={delivery} onChange={id=>{ setDelivery(id); if (!isLocker(id)) setLockerId(null); }} address={address} addresses={addresses} locker={locker} onPickLocker={()=>setSub('locker')} go={go} back={back} />;
-    if (step === 4) return <StepPayment value={payment} onChange={id=>{ setPayment(id); if (id === 'bank' && redeem) { setRedeem(false); setRedeemDropped(true); } }} wallet={wallet} onWallet={setWallet} redeem={redeem} setRedeem={setRedeem} card={card} onCards={()=>setSub('cards')} go={go} back={back} />;
+    if (step === 2) return <StepAddress total={totals().total} address={address} addresses={addresses} onAddress={setAddress} onAdd={()=>setSub('newaddress')} go={go} back={back} />;
+    if (step === 3) return <StepDelivery total={totals().total} value={delivery} onChange={id=>{ setDelivery(id); if (!isLocker(id)) setLockerId(null); }} address={address} addresses={addresses} locker={locker} onPickLocker={()=>setSub('locker')} go={go} back={back} />;
+    if (step === 4) return <StepPayment total={totals().total} value={payment} onChange={id=>{ setPayment(id); if (id === 'bank' && redeem) { setRedeem(false); setRedeemDropped(true); } }} wallet={wallet} onWallet={setWallet} redeem={redeem} setRedeem={setRedeem} card={card} onCards={()=>setSub('cards')} go={go} back={back} />;
     if (step === 5) return <StepReview {...common} balance={balance} redeemDropped={redeemDropped} go={place} address={address} addresses={addresses} locker={locker} pharmacy={pharmacy} delivery={delivery} payment={payment} wallet={wallet} redeem={redeem} setRedeem={setRedeem} />;
     return <StepDone qty={qty} magQty={magQty} main={main} delivery={delivery} redeem={redeem} payment={payment} total={totals().total} id={placed.current ? placed.current.id : undefined} onTrack={()=>nav.set && placed.current ? nav.set(['profile','orders','order:'+placed.current.id]) : null} back={()=>{ if (nav.tab) nav.tab('shop'); else if (onExit) onExit(); else setI(0); }} restart={()=>onExit?onExit():setI(0)} />;
   };

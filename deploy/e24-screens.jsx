@@ -366,7 +366,7 @@ function ShopScreen({ initialFilter, group, openSearch, category, initialQuery, 
   if (sort === 'Price: high to low') list = list.slice().sort((a,b)=>priceNum(b.price)-priceNum(a.price));
   if (sort === 'Newest') list = list.slice().reverse();
   return (
-    <Screen active="Shop" title={cat || coll ? '' : g ? g.title : 'Shop'} onBack={cat || g || coll ? nav.back : undefined}
+    <Screen active="Shop" title={cat || coll || g ? '' : 'Shop'} onBack={cat || g || coll ? nav.back : undefined}
       overlay={searching ? <SearchOverlay initial={query} onClose={()=>setSearching(false)} onSubmit={t => (cat || g) ? nav.go('q:' + t) : setQuery(t)} onCategory={f=>nav.go('cat:'+f)} /> : null}
       action={<React.Fragment>
       <AppIcon icon="search" label="Search" onClick={()=>setSearching(true)} />
@@ -379,6 +379,7 @@ function ShopScreen({ initialFilter, group, openSearch, category, initialQuery, 
           ))}
         </div>
       )}
+      {g ? <h1 className="cathead">{g.title}</h1> : null}
       {coll ? (
         <React.Fragment>
           <h1 className="cathead">{coll.title}</h1>
@@ -597,32 +598,30 @@ function CardScreen() {
       <CartAction onClick={()=>nav.go('cart')} />
     </React.Fragment>}>
       {!verified ? <StateBanner icon="mail-exclamation" title="Your card is waiting on your email">The QR code works once you open the confirmation link we sent. Until then, points cannot be added at the register.</StateBanner> : null}
-      <div className="hero memcard tilt" ref={cardRef} data-focus={focus ? 'true' : undefined} data-focusin={focusIn ? 'true' : undefined} style={{gap:18}}>
-        <div className="cardfade" style={{position:'relative',display:'flex',alignItems:'baseline',justifyContent:'center'}}>
-          <span className="club" style={{fontSize:16,fontFamily:'"Cooper Md BT", Georgia, serif'}}>WellPlus</span>
+      <div className="ptsbox">
+        <div className="ptsleft">
+          <div className="lbl">Your WellPlus balance</div>
+          <span className="num">1.247</span>
         </div>
+        <span className="eur">≈ €12,47 to spend</span>
+      </div>
+      <div className="hero memcard tilt" ref={cardRef} data-focus={focus ? 'true' : undefined} data-focusin={focusIn ? 'true' : undefined} style={{gap:18}}>
         <div className="qrpanel qrtap" ref={qrRef} role="button" tabIndex={0} aria-label="Enlarge code for scanning" onClick={()=>{ if (focus) closeFocus(); else openFocus(); }} onKeyDown={e=>{if(e.key==='Enter'||e.key===' ')openFocus();}} style={{position:'relative'}}>
           <div className="qrgrid" style={{gridTemplateColumns:'repeat('+QN+',1fr)'}}>{qrCells}</div>
           <span className="memno">WP-4820-1176</span>
         </div>
-        <div className="cardfade" style={{position:'relative',display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:12}}>
-          <div>
-            {MEMBER_NAME ? (
-              <React.Fragment>
-                <div className="memname">{MEMBER_NAME}</div>
-                <div className="memsince">Member since 2024</div>
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                <div className="memsince" style={{marginTop:0}}>Member since 2024</div>
-                <div className="memnamehint">Your name appears here after your first delivery address</div>
-              </React.Fragment>
-            )}
-          </div>
-          <div style={{textAlign:'right'}}>
-            <div className="num" style={{fontSize:42}}>1.247</div>
-            <div className="memsince">≈ €12,47 to spend</div>
-          </div>
+        <div className="cardfade" style={{position:'relative',display:'flex',flexDirection:'column',alignItems:'center',textAlign:'center',gap:2}}>
+          {MEMBER_NAME ? (
+            <React.Fragment>
+              <div className="memname">{MEMBER_NAME}</div>
+              <div className="memsince">Member since 2024</div>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <div className="memsince" style={{marginTop:0}}>Member since 2024</div>
+              <div className="memnamehint" style={{maxWidth:'26ch'}}>Your name appears here after your first delivery address</div>
+            </React.Fragment>
+          )}
         </div>
       </div>
       <p className="body" style={{textAlign:'center',padding:'0 8px'}}>Show this code at the register in any of the 21 pharmacies. Points are added to your balance within a few hours.</p>
