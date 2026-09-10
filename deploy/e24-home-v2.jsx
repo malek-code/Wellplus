@@ -176,9 +176,6 @@ function BuyAgainSheet({ set, onClose, onAdd }) {
 function BuyAgainRail({ onOpen }) {
   const nav = useNav();
   const railRef = React.useRef(null);
-  const [atEnd, setAtEnd] = React.useState(false);
-  const onScroll = () => { const el = railRef.current; if (el) setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 4); };
-  const nudge = () => { const el = railRef.current; if (el) el.scrollBy({ left: atEnd ? -el.scrollWidth : 168, behavior:'smooth' }); };
   const find = k => (window.CATALOGUE || []).find(p => p.key === k);
   const sets = AGAIN_SETS.map(s => ({ ...s, items: s.keys.map(find).filter(Boolean) })).filter(s => s.items.length === s.keys.length);
   const totalOf = s => s.items.filter(p => !(s.gone || []).includes(p.key)).reduce((t,p)=>t+priceOf(p.price), 0);
@@ -192,8 +189,7 @@ function BuyAgainRail({ onOpen }) {
     <React.Fragment>
       <SecLabel>Buy again</SecLabel>
       <div className="againwrap">
-      <button className="collarrow" data-dir="next" aria-label={atEnd ? 'Back to start' : 'More to buy again'} onClick={nudge}><i className={'ti ti-chevron-' + (atEnd ? 'left' : 'right')}></i></button>
-      <div className="againrail" ref={railRef} onScroll={onScroll}>
+      <div className="againrail" ref={railRef}>
         {sets.map(s=>(
           <div className="againcard" key={s.id}>
             <button className="agtap" onClick={()=>onOpen(s.id)} aria-label={'Buy again: ' + labelFor(s.items)}>

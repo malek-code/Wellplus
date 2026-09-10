@@ -3,17 +3,10 @@ const { Banner: ABanner, Switch: ASwitch, Field: AField, TextInput: ATextInput }
 function SecurityScreen() {
   const nav = useNav();
   const [bio, setBio] = React.useState(true);
-  const [twofa, setTwofa] = React.useState(false);
   const [pw, setPw] = React.useState(false);
   const [saved, setSaved] = React.useState(false);
   const [form, setForm] = React.useState({ current:'', next:'', again:'' });
-  const [signedOut, setSignedOut] = React.useState([]);
   const [del, setDel] = React.useState(false);
-  const sessions = [
-    { id:'this', device:'iPhone 14 · this device', meta:'Zagreb · active now', current:true },
-    { id:'ipad', device:'iPad Air', meta:'Zagreb · last used 19 Aug 2026' },
-    { id:'web', device:'Chrome on Windows', meta:'Varaždin · last used 11 Aug 2026' }
-  ];
   const set = (k,v) => setForm(f=>({...f,[k]:v}));
   return (
     <Shell title="Security & sign-in" onBack={nav.back}>
@@ -37,37 +30,14 @@ function SecurityScreen() {
 
       <SecLabel>Signing in</SecLabel>
       <div className="card" style={{display:'flex',flexDirection:'column',gap:0}}>
-        <div className="secrow">
+        <div className="secrow last">
           <span>
             <span className="t">Face ID unlock</span>
             <span className="s">Open the app and your QR card without typing a password.</span>
           </span>
           <ASwitch checked={bio} label="Face ID unlock" onChange={setBio} />
         </div>
-        <div className="secrow last">
-          <span>
-            <span className="t">Two-step verification</span>
-            <span className="s">A one-time code by SMS to +385 91 234 5678 when signing in on a new device.</span>
-          </span>
-          <ASwitch checked={twofa} label="Two-step verification" onChange={setTwofa} />
-        </div>
       </div>
-
-      <SecLabel aside={sessions.length - signedOut.length + ' active'}>Devices</SecLabel>
-      <div className="card" style={{display:'flex',flexDirection:'column',gap:0}}>
-        {sessions.filter(s=>!signedOut.includes(s.id)).map((s,i,arr)=>(
-          <div className={'secrow' + (i===arr.length-1?' last':'')} key={s.id}>
-            <span>
-              <span className="t">{s.device}</span>
-              <span className="s">{s.meta}</span>
-            </span>
-            {s.current
-              ? <span className="microlabel" style={{fontSize:10}}>Current</span>
-              : <button className="ghostbtn" style={{minHeight:34,padding:'0 14px',fontSize:12}} onClick={()=>setSignedOut(v=>[...v,s.id])}>Sign out</button>}
-          </div>
-        ))}
-      </div>
-      <ABanner tone="quiet">Signing out a device does not affect your points or your orders. Your WellPlus card keeps working in the pharmacy.</ABanner>
 
       <hr className="rule" />
       <div className="dangerblock">
@@ -120,7 +90,7 @@ function AboutScreen() {
       <SecLabel>Company</SecLabel>
       <div className="card" style={{display:'flex',flexDirection:'column',gap:0}}>
         <div className="kvrow"><span>Registered name</span><b>Ljekarne Švaljek</b></div>
-        <div className="kvrow"><span>Seat</span><b>Varaždin, Croatia</b></div>
+        <div className="kvrow"><span>Seat</span><b>Marija Bistrica, Croatia</b></div>
         <div className="kvrow"><span>Pharmacies</span><b>21</b></div>
         <div className="kvrow last"><span>Group</span><b>Salvus Health</b></div>
       </div>

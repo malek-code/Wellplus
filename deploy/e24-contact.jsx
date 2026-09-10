@@ -100,7 +100,6 @@ function ContactSentScreen() {
         <p>We reply within one working day, to iva.jurasin@primjer.hr.</p>
         <span className="ticket">Reference SUP-20831-118</span>
       </div>
-      <CtBanner tone="quiet">If your question is about an order in progress, delivery continues as normal while we look into it.</CtBanner>
       <button className="ghostbtn" onClick={()=>nav.set(['profile','faq'])}><i className="ti ti-help" style={{fontSize:17}}></i>Read the FAQ</button>
       <button className="ghostbtn" onClick={()=>nav.set(['profile'])}><i className="ti ti-user" style={{fontSize:17}}></i>Back to profile</button>
     </Shell>

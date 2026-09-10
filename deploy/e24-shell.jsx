@@ -122,6 +122,7 @@ function Dots({ count, index, onSelect, label = 'Item' }) {
 
 const CartStore = { qty:{ 'Supradyn® Imuno Boost':1, 'Supradyn® Energija':1 }, subs:new Set(),
   add(name, n = 1){ if(!name) return; this.qty[name] = (this.qty[name]||0) + n; this.subs.forEach(f=>f()); },
+  replace(pairs){ this.qty = {}; (pairs||[]).forEach(([name,n])=>{ if(name && n > 0) this.qty[name] = n; }); this.subs.forEach(f=>f()); },
   get(name){ return this.qty[name] || 0; },
   sub(f){ this.subs.add(f); return ()=>this.subs.delete(f); } };
 function useCartQty(name){

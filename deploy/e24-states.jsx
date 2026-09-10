@@ -93,13 +93,12 @@ function WelcomeBonusScreen({ onDone }) {
 /* ---------- E4 notification settings ---------- */
 
 const PUSH_CATEGORIES = [
-  { id:'transactional', t:'Orders and payments', s:'Order confirmed, sent, ready, refunded. Cannot be turned off while an order is in progress.', locked:true, on:true, confirm:['Order notifications are on','Order notifications are off'] },
   { id:'points', t:'Points and redemptions', s:'Points earned in a pharmacy or on a webshop, and points spent. The only channel that reports them.', on:true,
     confirm:['Points notifications are on','Points notifications are off'] },
   { id:'campaigns', t:'Offers and WellPlus news', s:'Campaigns and pharmacist advice. Follows your marketing consent.', on:false,
     confirm:['Offers and news notifications are on','Offers and news notifications are off'] },
-  { id:'system', t:'Account and security', s:'Sign-in on a new device, password changes, service notices.', on:true,
-    confirm:['Account and security notifications are on','Account and security notifications are off'] }
+  { id:'system', t:'System', s:'Service notices about the app: maintenance, outages and changes to the programme.', on:true,
+    confirm:['System notifications are on','System notifications are off'] }
 ];
 
 function NotificationSettingsScreen({ denied = false, onToast }) {
@@ -117,7 +116,7 @@ function NotificationSettingsScreen({ denied = false, onToast }) {
     <Shell title="Notifications" onBack={()=>nav.back()}>
       {denied
         ? <StateBanner icon="bell-off" title="Push is switched off for e24" action="Open system settings">Croatia's pharmacy points arrive by push only — there is no message inbox in the app. Turn notifications back on for e24 in your phone settings.</StateBanner>
-        : <p className="body" style={{margin:0}}>Push is the only place points and order updates are announced. Choose what you want to hear about.</p>}
+        : <p className="body" style={{margin:0}}>Push is the only place points are announced. Choose what you want to hear about.</p>}
       <SwitchList items={PUSH_CATEGORIES} values={on} disabled={denied} onToggle={flip} />
       <p className="tiny">Notifications are delivered by the operating system. e24 cannot send them if push is switched off for the app in your phone settings.</p>
     </Shell>
@@ -129,7 +128,7 @@ function NotificationSettingsScreen({ denied = false, onToast }) {
 
 const PUSH_SAMPLES = [
   { cat:'Points and redemptions', title:'+26 points', body:'Ljekarna Švaljek — Ilica 191. Balance 1.273 points.' },
-  { cat:'Orders and payments', title:'Order WP-20826-441 is on the way', body:'DPD has your parcel. Track it in My orders.' },
+  { cat:'System', title:'WellPlus is briefly unavailable', body:'Points earned tonight are added once the maintenance finishes.' },
   { cat:'Offers and WellPlus news', title:'Vitamin D season', body:'Pharmacist advice on dosing through winter, plus 20% off Supradyn Kids Imuno Boost.' }
 ];
 

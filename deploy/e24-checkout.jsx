@@ -1,4 +1,4 @@
-const { StepIndicator, ListRow, StatusBadge } = window.E24WellPlusDesignSystem_54c90b;
+const { StepIndicator, ListRow, StatusBadge, FaqItem } = window.E24WellPlusDesignSystem_54c90b;
 const STEPS = ['Address','Delivery','Payment','Review'];
 const stepsFor = () => STEPS;
 const isLocker = d => d === 'box' || d === 'gls';
@@ -13,44 +13,65 @@ const CATALOG = {
   esterc: { img:'https://ljekarnaonline.hr/upload/catalog/product/29021/thumb/supradyn-imuno-boost-vitamin-c-vitamin-d-cink-sume_616942bc7df8b_580x580r.jpg', name:'Supradyn® Imuno Boost', size:'20 šumećih tableta', price:19.83, brand:'Supradyn',
     desc:'Supradyn Imuno Boost - dodatak prehrani temeljen na vitaminima C i D i cinku, koji pridonose normalnom funkcioniranju imunološke tablete. S ugodnim okusom naranče.',
     shots:['assets/products/supradyn-imuno-lifestyle-1.jpg','assets/products/supradyn-imuno-lifestyle-2.jpg'],
-    stock:'In stock — ships within one working day.' },
+    nutrients:[['Vitamin C','1000 mg','1250 %'],['Vitamin D','10 µg','200 %'],['Zinc','10 mg','100 %']],
+    info:[
+      { q:'Why take it', a:'Vitamins C and D and zinc contribute to the normal function of the immune system. Zinc is also needed for a large number of enzymes to work properly and helps protect cells from oxidative stress. Intended as everyday immune support, particularly through the colder months.' },
+      { q:'How to take it', a:'Adults and children over 14: one effervescent tablet a day. Dissolve the tablet in a glass of water (200 ml) and drink. Do not exceed the recommended daily dose.' },
+      { q:'Ingredients', a:'L-ascorbic acid; acidity regulator: sodium carbonate; acid: citric acid; bulking agent: isomalt; acid: malic acid; colour: beta-carotene; orange flavouring; zinc citrate; sweeteners: acesulfame K, sucralose; sodium chloride; cholecalciferol.' },
+      { q:'Warnings', a:'Not recommended for people with haemochromatosis, hypercalcaemia or kidney disease, or for women who are pregnant or breastfeeding. Contains sweeteners. If you take other vitamin D or zinc preparations, check your total daily intake with your pharmacist.' },
+      { q:'Storage', a:'Keep in the original tube in a dry place below 25 °C, out of the reach of small children. A food supplement is not a substitute for a balanced, varied diet and a healthy lifestyle.' }
+    ],
+    stock:'In stock.' },
   calmag: { img:'https://ljekarnaonline.hr/upload/catalog/product/1274/thumb/supradyn-energija-30-tableta_64f068b65820e_580x580r.jpg', name:'Supradyn® Energija', size:'30 filmom obloženih tableta', price:21.62, brand:'Supradyn',
     desc:'Supradyn® Energija je multivitaminski pripravak s mineralima i koenzimom Q10, koji služi kao dodatak prehrani tijekom cijeloga dana.',
-    stock:'In stock — ships within one working day.' },
+    stock:'In stock.' },
   d3: { prime:true, img:'https://ljekarnaonline.hr/upload/catalog/product/29022/thumb/kids-imuno-boost_64f06aebc337e_580x580r.jpg', name:'Supradyn Kids Imuno Boost', size:'100 žele bombona', price:27.53, brand:'Supradyn',
     desc:'Supradyn Kids Imuno Boost sadrži vitamine C i D i cink koji igraju ulogu u normalnom funkcioniranju imunološkog sustava.',
-    stock:'In stock — ships within one working day.' },
-  selenium: { img:'https://ljekarnaonline.hr/upload/catalog/product/19247/thumb/multi_5bd17d6e5fc8d_580x580r.jpg', name:'Apipharma Apivit Multi sirup', size:'100 ml', price:9.99, brand:'Apipharma',
+    stock:'In stock.' },
+  selenium: { img:'https://ljekarnaonline.hr/upload/catalog/product/19247/thumb/multi_5bd17d6e5fc8d_580x580r.jpg', name:'Apipharma Apivit Multi sirup', size:'100 ml', price:9.99, was:12.49, brand:'Apipharma',
     desc:'Apivit® tekući dodatak prehrani s medom i vitaminima za djecu i odrasle preporučujemo kao vitaminsku dopunu prehrani, osobito u zimi i proljeće, kod djece sa smanjenim apetitom, kod premorene školske djece slabe koncentracije i pojačanog umora.',
-    stock:'In stock — ships within one working day.' },
+    stock:'In stock.' },
   betacarotene: { img:'https://ljekarnaonline.hr/upload/catalog/product/34586/thumb/collagentime-beauty-500ml-21-e1677668144451_642ab74cb10e5_580x580r.png', name:'Hamapharm Collagen Time Beauty', size:'3 × 500 ml (2+1)', price:79.80, brand:'Hamapharm',
     desc:'Akcijsko pakiranje 2+1 tekućeg kolagena Collagen Time Beauty, 500 ml po bočici.',
-    stock:'In stock — ships within one working day.' },
+    stock:'In stock.' },
   omega3: { prime:true, img:'https://ljekarnaonline.hr/upload/catalog/product/29747/thumb/almagea-shine-on-2022_6284bbc48b52d_580x580r.jpg', name:'Almagea® SHINE ON+', size:'45 kapsula', price:26.46, brand:'Almagea',
     desc:'Dodatak prehrani za zdravlje i ljepotu kose, kože i noktiju.',
-    stock:'In stock — ships within one working day.' },
-  magcitrate: { img:'https://cdn11.bigcommerce.com/s-zmgdyj2jxr/images/stencil/500x659/products/475/947/Vital_Proteins_Collagen_Peptidi_A10__04096__98490.1766046839.386.513__07607.1768299249.jpg?c=1', name:'Vital Proteins Collagen Peptides', size:'10 vrećica po 10 g · bez okusa', price:21.99, brand:'Vital Proteins',
+    stock:'In stock.' },
+  magcitrate: { img:'https://cdn11.bigcommerce.com/s-zmgdyj2jxr/images/stencil/500x659/products/475/947/Vital_Proteins_Collagen_Peptidi_A10__04096__98490.1766046839.386.513__07607.1768299249.jpg?c=1', name:'Vital Proteins Collagen Peptides', size:'10 vrećica po 10 g · bez okusa', price:21.99, was:26.99, brand:'Vital Proteins',
     desc:'Ove praktične Vital Proteins Collagen Peptidi vrećice omogućuju jednostavan, bioraspoloživ unos goveđeg kolagena u prahu bilo kada i bilo gdje, podržavajući prirodne razine kolagena u tijelu.',
-    stock:'In stock — ships within one working day.' },
+    stock:'In stock.' },
   salvusept: { img:'https://cdn11.bigcommerce.com/s-2xoeaz93e6/images/stencil/500x659/products/4624/30355/C041723__1__62136.1776692820.jpg?c=1', name:'Mikrozid Sensitive otopina', size:'1 litra', price:9.66, brand:'Mikrozid',
     desc:'Sredstvo bez alkohola za brzu dezinfekciju medicinskih uređaja i površina, na osnovi kvaternih amonijevih spojeva.',
-    stock:'In stock — ships within one working day.' },
-  vitalcollagen: { img:'https://cdn11.bigcommerce.com/s-2xoeaz93e6/images/stencil/500x659/products/4636/4746/mikrozidr-sensitive-maramice-punjenje-a-200-1_62260a487bfd2__05980.1743155814.jpg?c=1', name:'Mikrozid Sensitive maramice, punjenje', size:'200 maramica', price:11.38, brand:'Mikrozid',
+    stock:'In stock.' },
+  vitalcollagen: { img:'https://cdn11.bigcommerce.com/s-2xoeaz93e6/images/stencil/500x659/products/4636/4746/mikrozidr-sensitive-maramice-punjenje-a-200-1_62260a487bfd2__05980.1743155814.jpg?c=1', name:'Mikrozid Sensitive maramice, punjenje', size:'200 maramica', price:11.38, was:13.99, brand:'Mikrozid',
     desc:'Bezalkoholne maramice za čišćenje i dezinfekciju medicinskih proizvoda i svih vrsta površina.',
-    stock:'In stock — ships within one working day.' },
+    stock:'In stock.' },
   klompe: { img:'https://cdn11.bigcommerce.com/s-zmgdyj2jxr/images/stencil/500x659/products/470/941/YUWELL_TOALETNA_KOLICA_H032B__59976__76996.1766046794.386.513__76665.1768299242.jpg?c=1', name:'Yuwell toaletna kolica', size:'Model H032B', price:174.30, brand:'Yuwell',
     desc:'Kombinacija invalidskih kolica i toaletnog stolca. Sigurni kotači s pojedinačnim kočnicama, podesivi oslonci za noge i praktičnost za kućnu njegu ili domove za starije.',
-    stock:'In stock — ships within one working day.' },
+    stock:'In stock.' },
   multiroyal: { img:'https://cdn11.bigcommerce.com/s-2xoeaz93e6/images/stencil/500x659/products/6077/37893/D100664__1__47265.1776770215.jpg?c=1', name:'Manusal rukavice latex bez pudera', size:'100 komada · S–XL', price:9.28, brand:'Manusal',
     desc:'Rukavice latex bez pudera, elastične i otporne na klizanje, pružaju sigurnu zaštitu za ruke. Pakiranje sadrži 100 komada – profesionalno i praktično!',
-    stock:'In stock — ships within one working day.' },
+    stock:'In stock.' },
   zinc: { img:'https://cdn11.bigcommerce.com/s-2xoeaz93e6/images/stencil/500x659/products/12149/39788/schulke-mikrozid-af-maramice_220__93135.1779276716.jpg?c=1', name:'Mikrozid maramice za dezinfekciju površina', size:'220 komada', price:22.40, brand:'Mikrozid',
     desc:'Maramice impregnirane alkoholnom otopinom za dezinfekciju medicinskih uređaja i površina.',
-    stock:'In stock — ships within one working day.' },
+    stock:'In stock.' },
   biotin: { img:'https://cdn11.bigcommerce.com/s-zmgdyj2jxr/images/stencil/500x659/products/467/938/YUWELL_STAP_ZA_HODANJE_NA_SKLAPANJE_YU838__35023__78783.1766046856.386.513__30580.1768299237.jpg?c=1', name:'Yuwell sklopivi štap za hodanje', size:'Model YU838', price:11.25, brand:'Yuwell',
     desc:'Lagan i sklopivi štap, idealan za putovanja i svakodnevnu upotrebu. Protuklizna baza i ergonomska drška za sigurnost i udobnost.',
-    stock:'In stock — ships within one working day.' }
+    stock:'In stock.' }
 };
+
+/* Regulatory notice and points eligibility are catalogue data, per product.
+   A product with no notice shows no row; a product that earns no points shows a note. */
+const NOTICES = {
+  supplement:'Food supplement. Not a substitute for a varied and balanced diet and a healthy lifestyle. Keep out of the reach of small children.',
+  biocide:'Biocidal product. Use safely. Always read the label and the product information before use.',
+  device:'Medical device. Read the instructions for use before first use.'
+};
+const NOTICE_BY_KEY = { esterc:'supplement', calmag:'supplement', d3:'supplement', selenium:'supplement', betacarotene:'supplement', omega3:'supplement', magcitrate:'supplement', zinc:'biocide', salvusept:'biocide', vitalcollagen:'biocide', multiroyal:'device' };
+const NO_EARN = { klompe:'device', biotin:'device' };
+const NO_EARN_NOTE = { device:'This product earns no points.', rx:'Prescription medicines and co-payments earn no points.' };
+Object.keys(CATALOG).forEach(k => { const p = CATALOG[k]; p.key = k; p.notice = NOTICES[NOTICE_BY_KEY[k]] || null; p.earn = NO_EARN[k] || null; });
+const earnedFor = (p, q = 1) => p && !p.earn ? Math.floor(p.price * q) : 0;
 
 const ADDRESSES = [
   { id:'home', t:'Home · Iva Jurašin', s:'Ilica 128, 10000 Zagreb\n+385 91 234 5678', def:true,
@@ -59,9 +80,9 @@ const ADDRESSES = [
     form:{ label:'Work', name:'Iva Jurašin', street:'Radnička cesta 52', extra:'4th floor, reception', postcode:'10000', city:'Zagreb', phone:'+385 91 234 5678', note:'', def:false } }
 ];
 const DELIVERY = [
-  { id:'courier', t:'DPD to my address', s:'1–2 working days', price:4.30, icon:'truck-delivery' },
-  { id:'box', t:'DPD parcel locker', s:'Collect any time within 3 days', price:4.30, icon:'package' },
-  { id:'gls', t:'GLS parcel locker', s:'Collect any time within 5 days', price:4.30, icon:'package' }
+  { id:'courier', t:'DPD to my address', s:'1–2 working days', price:4.30 },
+  { id:'box', t:'DPD parcel locker', s:'Collect any time within 3 days', price:4.30 },
+  { id:'gls', t:'GLS parcel locker', s:'Collect any time within 5 days', price:4.30 }
 ];
 const PAYMENT = [
   { id:'card', t:'Card', s:'Entered and confirmed here in the app', icon:'credit-card' },
@@ -69,10 +90,10 @@ const PAYMENT = [
   { id:'keks', t:'KEKS Pay', s:'Hands off to the KEKS Pay app, then returns here', icon:'device-mobile' },
   { id:'aircash', t:'Aircash', s:'4-minute window to confirm in the Aircash app', icon:'wallet' },
   { id:'paycek', t:'PayCek', s:'', icon:'qrcode' },
-  { id:'bank', t:'Bank transfer', s:'Pay by IBAN in your banking app', icon:'building-bank' },
-  { id:'cod', t:'Cash on delivery', s:'', icon:'cash' }
+  { id:'bank', t:'Bank transfer', s:'Pay by IBAN in your banking app', icon:'building-bank', deferred:true }
 ];
 const WALLET_METHODS = PAYMENT.filter(m => ['gpay','keks','aircash','paycek'].includes(m.id));
+const isDeferred = id => ((PAYMENT.find(m => m.id === id) || {}).deferred === true);
 const isProviderPay = id => ['gpay','keks','aircash','paycek'].includes(id);
 
 function StepPills({ steps, current }) {
@@ -200,17 +221,22 @@ function StepProduct({ qty, setQty, main, go, back }) {
     timers.current.push(setTimeout(()=>setPhase('idle'), 2000));
   };
   return (
-    <Shell title="Product" cartIcon onBack={back} footer={<Footer label="Price" amount={p.price*qty} cta="Add to cart" onClick={add} phase={phase} note={`Earns ${Math.floor(p.price*qty)} WellPlus points`} />}>
+    <Shell title="Product" cartIcon onBack={back} footer={<Footer label="Price" amount={p.price*qty} cta="Add to cart" onClick={add} phase={phase} />}>
       <Gallery p={p} />
       <div>
-        <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{fontFamily:'var(--font-label)',fontSize:11,letterSpacing:'.12em',textTransform:'uppercase',color:'var(--text-faint)'}}>{p.brand}</span>{p.prime ? <span className="primetag" data-inline="true">PRIME</span> : null}</div>
+        {p.prime ? <div style={{display:'flex',alignItems:'center',gap:8}}><span className="primetag" data-inline="true">PRIME</span></div> : null}
         <h1 style={{fontFamily:'var(--font-serif-display)',fontSize:27,fontWeight:500,letterSpacing:'.005em',lineHeight:1.15,color:'var(--text-body)',margin:'8px 0 0',textWrap:'pretty'}}>{p.name}</h1>
         <div className="tiny" style={{marginTop:6}}>{p.size}</div>
       </div>
       <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:12}}>
         <div>
-          <div style={{fontFamily:'var(--font-numeric)',fontSize:30,fontWeight:500,letterSpacing:'.01em',fontVariantNumeric:'tabular-nums',color:'var(--text-body)'}}>{eur(p.price)}</div>
-          <span className="pill" style={{marginTop:8}}>+{Math.floor(p.price*qty)} points</span>
+          <div style={{display:'flex',alignItems:'baseline',gap:10}}>
+            <div style={{fontFamily:'var(--font-numeric)',fontSize:30,fontWeight:500,letterSpacing:'.01em',fontVariantNumeric:'tabular-nums',color:'var(--text-body)'}}>{eur(p.price)}</div>
+            {p.was ? <span style={{fontFamily:'var(--font-numeric)',fontSize:15,color:'var(--text-faint)',textDecoration:'line-through'}}>{eur(p.was)}</span> : null}
+          </div>
+          {p.earn
+            ? <div className="tiny" style={{marginTop:8}}>{NO_EARN_NOTE[p.earn]}</div>
+            : <div style={{marginTop:8,fontFamily:'var(--font-numeric)',fontSize:14,fontWeight:500,color:'var(--text-brand)'}}>Earns {earnedFor(p,qty)} points</div>}
         </div>
         <div className="step-stepper">
           <button onClick={()=>setQty(Math.max(1,qty-1))} aria-label="Less"><i className="ti ti-minus"></i></button>
@@ -223,18 +249,47 @@ function StepProduct({ qty, setQty, main, go, back }) {
       <div className="quiet">
         <ul className="mechanic">
           <li><i className="ti ti-truck-delivery"></i><span>{p.stock}</span></li>
-          <li><i className="ti ti-file-check"></i><span>Food supplement. Not a substitute for a varied diet.</span></li>
         </ul>
       </div>
+      {p.notice ? (
+        <div className="card">
+          <span className="microlabel">Product notice</span>
+          <p className="body" style={{marginTop:6}}>{p.notice}</p>
+        </div>
+      ) : null}
+      {p.nutrients ? (
+        <React.Fragment>
+          <SecLabel aside="Per tablet">Micronutrients</SecLabel>
+          <div className="card">
+            <div className="sum">
+              {p.nutrients.map(([n,amt,rda])=>(
+                <div className="r" key={n}><span>{n}</span><b>{amt} · {rda} RDA</b></div>
+              ))}
+            </div>
+          </div>
+        </React.Fragment>
+      ) : null}
+      {p.info ? (
+        <React.Fragment>
+          <SecLabel>Product details</SecLabel>
+          <div className="card">
+            {p.info.map((it,i)=>(
+              <FaqItem key={it.q} question={it.q} defaultOpen={i===0} style={i===p.info.length-1?{borderBottom:0}:undefined}>{it.a}</FaqItem>
+            ))}
+          </div>
+        </React.Fragment>
+      ) : null}
     </Shell>
   );
 }
 
-function StepCart({ qty, setQty, magQty, setMagQty, main, steps, total, go, back }) {
+function StepCart({ qty, setQty, magQty, setMagQty, main, steps, total, redeem, go, back }) {
   const nav = useNav();
   const second = main === CATALOG.calmag ? CATALOG.esterc : CATALOG.calmag;
   const sub = main.price*qty + second.price*magQty;
   const rows = [[main,qty,setQty],[second,magQty,setMagQty]].filter(([,q])=>q>0);
+  const earnable = rows.reduce((a,[p,q])=>a + earnedFor(p,q), 0);
+  React.useEffect(()=>{ if (window.CartStore) window.CartStore.replace(rows.map(([p,q])=>[p.name,q])); }, [qty, magQty, main]);
   return (
     <Shell title="Cart" steps={steps} onBack={back} footer={<Footer label="Total" amount={total} cta="Checkout" onClick={go} disabled={!qty && !magQty} />}>
       <div className="card">
@@ -261,8 +316,10 @@ function StepCart({ qty, setQty, magQty, setMagQty, main, steps, total, go, back
       </div>
       <div className="earnnote">
         <div>
-          <div className="t">{pts(Math.floor(sub))} points on this order</div>
-          <div className="s">You have {pts(BALANCE)} points ({eur(CREDIT)}) available to spend at review.</div>
+          <div className="t">{redeem ? 'No points on this order' : pts(earnable) + ' points on this order'}</div>
+          <div className="s">{redeem
+            ? 'A purchase paid for with points earns no new points.'
+            : 'Every €1 spent earns 1 point. You have ' + pts(BALANCE) + ' points (' + eur(CREDIT) + ') to spend at review.'}</div>
         </div>
       </div>
       <SecLabel>Add to order</SecLabel>
@@ -328,7 +385,7 @@ function StepAddress({ address, addresses, onAddress, onAdd, total, go, back }) 
 }
 
 function StepPayment({ value, onChange, wallet, onWallet, redeem, setRedeem, card, onCards, total, go, back }) {
-  const pick = id => { onChange(id); if (id === 'bank') setRedeem(false); };
+  const pick = id => { onChange(id); if (isDeferred(id)) setRedeem(false); };
   return (
     <Shell title="Payment" stepIndex={2} steps={STEPS} onBack={back} footer={<Footer label="Total" amount={total} cta="Continue" onClick={go} disabled={value === 'card' && !card} />}>
       <SecLabel>Payment method</SecLabel>
@@ -342,7 +399,7 @@ function StepPayment({ value, onChange, wallet, onWallet, redeem, setRedeem, car
                 <span className="txt"><span className="t">{m.t}</span></span>
                 <span className="brandmark">
                   {m.id === 'card'
-                    ? ['visa','mastercard','amex'].map(b=><img key={b} src={'assets/pay-' + b + '.svg'} alt="" />)
+                    ? ['visa','mastercard'].map(b=><img key={b} src={'assets/pay-' + b + '.svg'} alt="" />)
                     : m.id === 'keks'
                       ? <img className="sq" src="assets/pay-keks.png" alt="" />
                       : m.id === 'gpay'
@@ -367,7 +424,6 @@ function StepPayment({ value, onChange, wallet, onWallet, redeem, setRedeem, car
                   <p className="paynote">
                     {m.id === 'card' ? 'Card details are handled by the bank. You confirm with 3-D Secure without leaving the app.'
                       : m.id === 'bank' ? 'You get the payee, IBAN, model, reference and amount on the confirmation screen and in the email. WellPlus points cannot be used with bank transfer' + (redeem ? ' — the discount on your order has been removed.' : '.')
-                      : m.id === 'cod' ? 'You pay the courier on delivery. Points are credited once the pharmacy closes the order.'
                       : m.s ? m.s + '. Your cart is kept if you back out.'
                       : 'You are redirected to ' + m.t + ' to complete the payment, then returned here.'}
                   </p>
@@ -390,9 +446,10 @@ function StepReview({ qty, magQty, main, delivery, redeem, setRedeem, address, a
   const credit = redeem ? Math.min(worth, sub + ship) : 0;
   const total = sub + ship - credit;
   const earned = Math.floor(sub - credit);
-  const blocked = payment === 'bank' || bal < 100;
-  const blockedWhy = payment === 'bank'
-    ? 'Not available with bank transfer. Switch to card or a wallet to redeem.'
+  const deferred = isDeferred(payment);
+  const blocked = deferred || bal < 100;
+  const blockedWhy = deferred
+    ? 'Not available with ' + PAYMENT.find(p=>p.id===payment).t.toLowerCase() + ' — the payment is settled later. Switch to card or a wallet to redeem.'
     : bal < 100 ? `${pts(bal)} points so far. Redemption starts at 100 points — ${pts(100 - bal)} to go.` : null;
   const usedPts = Math.round(credit*100);
   const capped = redeem && !blocked && usedPts < bal;
@@ -402,7 +459,7 @@ function StepReview({ qty, magQty, main, delivery, redeem, setRedeem, address, a
   const nothingToPay = total <= 0.001;
   return (
     <Shell title="Review" stepIndex={3} steps={STEPS} onBack={back} footer={<Footer label="Total" amount={total} cta={nothingToPay ? 'Confirm order' : 'Place order'} onClick={go} disabled={!terms} />}>
-      {redeemDropped ? <StateBanner icon="alert-circle" title="Your points were taken off this order">Bank transfer cannot be combined with a redemption, so the €{'\u00A0'}discount was removed when you changed the payment method. Switch back to card or a wallet to use the points again.</StateBanner> : null}
+      {redeemDropped ? <StateBanner icon="alert-circle" title="Your points were taken off this order">A payment settled later cannot be combined with a redemption, so the discount was removed when you changed the payment method. Switch back to card or a wallet to use the points again.</StateBanner> : null}
       <div className="switchrow" data-off={blocked ? 'true' : undefined}>
         <div style={{position:'relative',flex:1,minWidth:0}}>
           <div className="t">Use my points</div>
@@ -471,7 +528,7 @@ function StepDone({ qty, magQty, main, delivery, redeem, back, restart, onTrack,
   const second = main === CATALOG.calmag ? CATALOG.esterc : CATALOG.calmag;
   const sub = main.price*qty + second.price*magQty;
   const credit = redeem ? Math.min(CREDIT, sub) : 0;
-  const earned = Math.floor(sub - credit);
+  const earned = redeem ? 0 : earnedFor(main,qty) + earnedFor(second,magQty);
   return (
     <div className="phone">
       <StatusBar />
@@ -547,7 +604,7 @@ function CheckoutFlow({ start = 0, fixed, initial = {}, product, balance, droppe
     return { second, items, ship, credit, total: items + ship - credit };
   };
 
-  const common = { qty, setQty, magQty, setMagQty, main, steps: stepsFor(delivery), go, back, goStep, total: totals().total };
+  const common = { qty, setQty, magQty, setMagQty, main, redeem, steps: stepsFor(delivery), go, back, goStep, total: totals().total };
 
   const commit = () => {
     const second = main === CATALOG.calmag ? CATALOG.esterc : CATALOG.calmag;
@@ -555,13 +612,13 @@ function CheckoutFlow({ start = 0, fixed, initial = {}, product, balance, droppe
     const ship = DELIVERY.find(d=>d.id===delivery).price;
     const credit = redeem ? Math.min(CREDIT, sub) : 0;
     const total = sub + ship - credit;
-    const earned = Math.floor(sub - credit);
+    const earned = redeem ? 0 : earnedFor(main,qty) + earnedFor(second,magQty);
     const dest = isLocker(delivery) && locker ? `${delivery === 'box' ? 'DPD' : 'GLS'} · ${locker.name}\n${locker.addr}`
       : (addresses.find(a=>a.id===address) || {}).s;
     placed.current = {
       id: 'WP-20826-' + (500 + Math.floor(Math.random()*400)),
       date: '26 Aug 2026', total: eur(total), status:'Order placed', tone:'wait',
-      items: qty + magQty, points: '+' + earned + ' pending', track: 0,
+      items: qty + magQty, points: earned ? '+' + earned + ' pending' : '0', track: 0,
       lines: [[main,qty],[second,magQty]].filter(([,q])=>q>0).map(([p,q])=>({ img:p.img, name:p.name, sub:`${q} × ${eur(p.price)}`, amt:eur(p.price*q) })),
       sum: { items:eur(sub), shipLabel:DELIVERY.find(d=>d.id===delivery).t, ship:ship?eur(ship):'Free', credit:credit?'−'+eur(credit):null },
       earned, credit, dest,
@@ -582,7 +639,7 @@ function CheckoutFlow({ start = 0, fixed, initial = {}, product, balance, droppe
     if (step === 1) return <StepCart {...common} />;
     if (step === 2) return <StepAddress total={totals().total} address={address} addresses={addresses} onAddress={setAddress} onAdd={()=>setSub('newaddress')} go={go} back={back} />;
     if (step === 3) return <StepDelivery total={totals().total} value={delivery} onChange={id=>{ setDelivery(id); if (!isLocker(id)) setLockerId(null); }} address={address} addresses={addresses} locker={locker} onPickLocker={()=>setSub('locker')} go={go} back={back} />;
-    if (step === 4) return <StepPayment total={totals().total} value={payment} onChange={id=>{ setPayment(id); if (id === 'bank' && redeem) { setRedeem(false); setRedeemDropped(true); } }} wallet={wallet} onWallet={setWallet} redeem={redeem} setRedeem={setRedeem} card={card} onCards={()=>setSub('cards')} go={go} back={back} />;
+    if (step === 4) return <StepPayment total={totals().total} value={payment} onChange={id=>{ setPayment(id); if (isDeferred(id) && redeem) { setRedeem(false); setRedeemDropped(true); } }} wallet={wallet} onWallet={setWallet} redeem={redeem} setRedeem={setRedeem} card={card} onCards={()=>setSub('cards')} go={go} back={back} />;
     if (step === 5) return <StepReview {...common} balance={balance} redeemDropped={redeemDropped} go={place} address={address} addresses={addresses} locker={locker} pharmacy={pharmacy} delivery={delivery} payment={payment} wallet={wallet} redeem={redeem} setRedeem={setRedeem} />;
     return <StepDone qty={qty} magQty={magQty} main={main} delivery={delivery} redeem={redeem} payment={payment} total={totals().total} id={placed.current ? placed.current.id : undefined} onTrack={()=>nav.set && placed.current ? nav.set(['profile','orders','order:'+placed.current.id]) : null} back={()=>{ if (nav.tab) nav.tab('shop'); else if (onExit) onExit(); else setI(0); }} restart={()=>onExit?onExit():setI(0)} />;
   };

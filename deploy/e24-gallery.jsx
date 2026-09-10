@@ -137,7 +137,7 @@ function PushGallery() {
   return <GalleryView title="Notifications — E4 and the push template"
     lead="Push is the only loyalty feedback channel in v1: there is no message inbox, so a missed push is only recoverable from the points history. Four categories, one of them locked while an order is open."
     items={[
-      { label:'E4 — notification settings', caption:'A toggle per push category. Orders and payments cannot be turned off while an order is in progress; offers follow the marketing consent from A4.', node:<div style={{position:'relative'}}><NotificationSettingsScreen onToast={showToast} />{toast}</div> },
+      { label:'E4 — notification settings', caption:'A toggle per push category. Order status push is v2, so there is no transactional category; offers follow the marketing consent from A4.', node:<div style={{position:'relative'}}><NotificationSettingsScreen onToast={showToast} />{toast}</div> },
       { label:'E4 — push denied at OS level', caption:'When the operating system permission is refused, the categories are inert and the screen routes to system settings instead of pretending the toggles work.', node:<NotificationSettingsScreen denied /> },
       { label:'Push template — points', caption:'Lock-screen template: app name, one-line title carrying the figure, body with the pharmacy and the new balance.', node:<PushLockScreen index={0} /> },
       { label:'Push template — order', caption:'Transactional push. Same template, no emoji, no urgency, order number in the title.', node:<PushLockScreen index={1} /> },

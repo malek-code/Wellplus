@@ -1,7 +1,7 @@
 const { ListRow, StatusBadge, Banner, Field, TextInput, Switch, FaqItem, EmptyState } = window.E24WellPlusDesignSystem_54c90b;
 
 const ORDERS = [
-  { id:'WP-20826-441', date:'21 Aug 2026', total:'€31,67', status:'On the way', tone:'wait', items:2, points:'+27 pending', track:2 },
+  { id:'WP-20826-441', date:'21 Aug 2026', total:'€33,28', status:'On the way', tone:'wait', items:2, points:'0', track:2 },
   { id:'WP-20812-208', date:'12 Aug 2026', total:'€24,90', status:'Delivered', tone:'ok', items:1, points:'+24', track:3 },
   { id:'WP-20804-119', date:'4 Aug 2026', total:'€128,40', status:'Delivered', tone:'ok', items:5, points:'+128', track:3 },
   { id:'WP-20729-076', date:'29 Jul 2026', total:'€18,20', status:'Refunded', tone:'negative', items:1, points:'−18', track:3 }
@@ -44,16 +44,6 @@ function ProfileScreen() {
           </div>
         </React.Fragment>
       ))}
-      <SecLabel>Preferences</SecLabel>
-      <div className="card swlist">
-        <div className="swrow" data-last="true">
-          <span className="txt">
-            <span className="t">Language</span>
-            <span className="s">The app follows this setting everywhere, including order statuses.</span>
-          </span>
-          <LangToggle />
-        </div>
-      </div>
       <SecLabel>Account</SecLabel>
       <div className="rowlist">
         <a href="#" onClick={e=>{e.preventDefault();nav.go('security');}}><span style={{display:'flex',alignItems:'center',gap:12}}><i className="ti ti-lock"></i>Security &amp; sign-in</span><i className="ti ti-chevron-right"></i></a>
@@ -99,7 +89,7 @@ function OrdersScreen() {
       ) : (
         <EmptyState icon="package" title="No orders here" description="Orders you place in the app appear in this list, with the points they earned." />
       )}
-      <p className="tiny">Orders placed in a pharmacy or on eljekarna24.hr are not listed here, but their points are.</p>
+      <p className="tiny">A purchase made in a pharmacy has no order — only its points appear in the app.</p>
     </Shell>
   );
 }
@@ -112,7 +102,7 @@ function OrderDetailScreen({ id }) {
     { img:'https://ljekarnaonline.hr/upload/catalog/product/29021/thumb/supradyn-imuno-boost-vitamin-c-vitamin-d-cink-sume_616942bc7df8b_580x580r.jpg', name:'Supradyn® Imuno Boost', sub:'1 × €19,83', amt:'€19,83' },
     { img:'https://ljekarnaonline.hr/upload/catalog/product/1274/thumb/supradyn-energija-30-tableta_64f068b65820e_580x580r.jpg', name:'Supradyn® Energija', sub:'1 × €21,62', amt:'€21,62' }
   ];
-  const sum = o.sum || { items:'€39,84', shipLabel:'Courier to my address', ship:'€4,30', credit:'−€12,47' };
+  const sum = o.sum || { items:'€41,45', shipLabel:'DPD to my address', ship:'€4,30', credit:'−€12,47' };
   return (
     <Shell title={o.id} onBack={nav.back} footer={
       <div className="footer">
@@ -156,7 +146,7 @@ function OrderDetailScreen({ id }) {
       <div className="switchrow">
         <Tendril />
         <div style={{position:'relative'}}>
-          <div className="t">{o.points} points</div>
+          <div className="t">{sum.credit ? 'No points earned' : o.points + ' points'}</div>
           <div className="s">{o.tone==='negative' ? 'Points earned on this order were removed when the refund was processed.' : sum.credit ? 'Points were used on this order, so it earns no new points.' : 'Earned points are pending until the pharmacy confirms it.'}</div>
         </div>
       </div>
@@ -197,17 +187,15 @@ function PersonalDetailsScreen() {
 
 function ConsentsScreen() {
   const nav = useNav();
-  const [on, setOn] = React.useState({ email:true, sms:false, offers:true });
+  const [on, setOn] = React.useState({ email:true, offers:true });
   const [req, setReq] = React.useState(false);
   const [toast, showToast] = useToast();
   const rows = [
     { id:'email', t:'Email about my orders', s:'Confirmations, delivery updates and invoices. Cannot be turned off for orders in progress.' },
-    { id:'sms', t:'SMS notifications', s:'A message when an order is ready for pick-up.' },
     { id:'offers', t:'Personalised offers', s:'Product suggestions based on what you have bought. Never medical advice.' }
   ];
   const CONFIRM = {
     email: ['Order emails are on', 'Order emails are off — emails for orders in progress still arrive'],
-    sms: ['SMS notifications are on', 'SMS notifications are off'],
     offers: ['Personalised offers are on', 'Personalised offers are off']
   };
   const toggle = (k, v) => { setOn({ ...on, [k]: v }); showToast(CONFIRM[k][v ? 0 : 1]); };

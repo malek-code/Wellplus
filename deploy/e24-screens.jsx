@@ -27,13 +27,13 @@ const CATALOGUE = [
   { key:'esterc', image:'https://ljekarnaonline.hr/upload/catalog/product/29021/thumb/supradyn-imuno-boost-vitamin-c-vitamin-d-cink-sume_616942bc7df8b_580x580r.jpg', name:'Supradyn® Imuno Boost', size:'20 šumećih tableta', price:'€19,83', cat:'Vitamins & minerals' },
   { key:'calmag', image:'https://ljekarnaonline.hr/upload/catalog/product/1274/thumb/supradyn-energija-30-tableta_64f068b65820e_580x580r.jpg', name:'Supradyn® Energija', size:'30 filmom obloženih tableta', price:'€21,62', cat:'Vitamins & minerals' },
   { key:'d3', image:'https://ljekarnaonline.hr/upload/catalog/product/29022/thumb/kids-imuno-boost_64f06aebc337e_580x580r.jpg', name:'Supradyn Kids Imuno Boost', size:'100 žele bombona', price:'€27,53', cat:'Mom & baby', prime:true },
-  { key:'selenium', image:'https://ljekarnaonline.hr/upload/catalog/product/19247/thumb/multi_5bd17d6e5fc8d_580x580r.jpg', name:'Apipharma Apivit Multi sirup', size:'100 ml', price:'€9,99', cat:'Mom & baby' },
+  { key:'selenium', image:'https://ljekarnaonline.hr/upload/catalog/product/19247/thumb/multi_5bd17d6e5fc8d_580x580r.jpg', name:'Apipharma Apivit Multi sirup', size:'100 ml', price:'€9,99', cat:'Mom & baby', was:'€12,49', tag:'−20 %' },
   { key:'betacarotene', image:'https://ljekarnaonline.hr/upload/catalog/product/34586/thumb/collagentime-beauty-500ml-21-e1677668144451_642ab74cb10e5_580x580r.png', name:'Hamapharm Collagen Time Beauty', size:'3 × 500 ml (2+1)', price:'€79,80', cat:'Face & body care' },
   { key:'omega3', image:'https://ljekarnaonline.hr/upload/catalog/product/29747/thumb/almagea-shine-on-2022_6284bbc48b52d_580x580r.jpg', name:'Almagea® SHINE ON+', size:'45 kapsula', price:'€26,46', cat:'Face & body care', prime:true },
-  { key:'magcitrate', image:'https://cdn11.bigcommerce.com/s-zmgdyj2jxr/images/stencil/500x659/products/475/947/Vital_Proteins_Collagen_Peptidi_A10__04096__98490.1766046839.386.513__07607.1768299249.jpg?c=1', name:'Vital Proteins Collagen Peptides', size:'10 vrećica po 10 g', price:'€21,99', cat:'Face & body care' },
+  { key:'magcitrate', image:'https://cdn11.bigcommerce.com/s-zmgdyj2jxr/images/stencil/500x659/products/475/947/Vital_Proteins_Collagen_Peptidi_A10__04096__98490.1766046839.386.513__07607.1768299249.jpg?c=1', name:'Vital Proteins Collagen Peptides', size:'10 vrećica po 10 g', price:'€21,99', cat:'Face & body care', was:'€26,99', tag:'−19 %' },
   { key:'zinc', image:'https://cdn11.bigcommerce.com/s-2xoeaz93e6/images/stencil/500x659/products/12149/39788/schulke-mikrozid-af-maramice_220__93135.1779276716.jpg?c=1', name:'Mikrozid maramice za dezinfekciju površina', size:'220 komada', price:'€22,40', cat:'First aid' },
   { key:'salvusept', image:'https://cdn11.bigcommerce.com/s-2xoeaz93e6/images/stencil/500x659/products/4624/30355/C041723__1__62136.1776692820.jpg?c=1', name:'Mikrozid Sensitive otopina', size:'1 litra', price:'€9,66', cat:'First aid' },
-  { key:'vitalcollagen', image:'https://cdn11.bigcommerce.com/s-2xoeaz93e6/images/stencil/500x659/products/4636/4746/mikrozidr-sensitive-maramice-punjenje-a-200-1_62260a487bfd2__05980.1743155814.jpg?c=1', name:'Mikrozid Sensitive maramice, punjenje', size:'200 maramica', price:'€11,38', cat:'First aid' },
+  { key:'vitalcollagen', image:'https://cdn11.bigcommerce.com/s-2xoeaz93e6/images/stencil/500x659/products/4636/4746/mikrozidr-sensitive-maramice-punjenje-a-200-1_62260a487bfd2__05980.1743155814.jpg?c=1', name:'Mikrozid Sensitive maramice, punjenje', size:'200 maramica', price:'€11,38', cat:'First aid', was:'€13,99', tag:'−19 %' },
   { key:'klompe', image:'https://cdn11.bigcommerce.com/s-zmgdyj2jxr/images/stencil/500x659/products/470/941/YUWELL_TOALETNA_KOLICA_H032B__59976__76996.1766046794.386.513__76665.1768299242.jpg?c=1', name:'Yuwell toaletna kolica', size:'Model H032B', price:'€174,30', cat:'First aid' },
   { key:'multiroyal', image:'https://cdn11.bigcommerce.com/s-2xoeaz93e6/images/stencil/500x659/products/6077/37893/D100664__1__47265.1776770215.jpg?c=1', name:'Manusal rukavice latex bez pudera', size:'100 komada · S–XL', price:'€9,28', cat:'First aid' },
   { key:'biotin', image:'https://cdn11.bigcommerce.com/s-zmgdyj2jxr/images/stencil/500x659/products/467/938/YUWELL_STAP_ZA_HODANJE_NA_SKLAPANJE_YU838__35023__78783.1766046856.386.513__30580.1768299237.jpg?c=1', name:'Yuwell sklopivi štap za hodanje', size:'Model YU838', price:'€11,25', cat:'First aid' }
@@ -346,6 +346,8 @@ function ShopScreen({ initialFilter, group, openSearch, category, initialQuery, 
     ['offer','On offer'],
     ['stock','Availability']
   ].filter(Boolean);
+  const [fromFilter, setFromFilter] = React.useState(false);
+  const openFacet = (k, viaFilter) => { setFromFilter(!!viaFilter); setSheet(k); };
   const FACET = {
     sort: { title:'Sort by', multi:false, options:SORTS, value:[sort], set:v=>setSort(v), reset:()=>setSort('Relevance') },
     category: { title: cat ? 'Sub-category' : 'Category', multi:false, options:Array.from(new Set(['All'].concat(catOptions))), value:[catValue], set:setCatValue, reset:()=>setCatValue('All') },
@@ -401,7 +403,7 @@ function ShopScreen({ initialFilter, group, openSearch, category, initialQuery, 
             <h3>Filter</h3>
             <div className="facetlist">
               {facetRows.map(([k,label])=>(
-                <button key={k} className="facetrow" onClick={()=>setSheet(k)}>
+                <button key={k} className="facetrow" onClick={()=>openFacet(k, true)}>
                   <span className="fname">{label}</span>
                   <span className="fval" data-set={valueOf[k] !== 'Any' && valueOf[k] !== 'All' ? 'true' : undefined}>{valueOf[k]}<i className="ti ti-chevron-right"></i></span>
                 </button>
@@ -415,7 +417,7 @@ function ShopScreen({ initialFilter, group, openSearch, category, initialQuery, 
         ) : sheet ? (
           <div className="fsheet">
             <div className="sheethead">
-              <button className="iconbtn" aria-label="Back to filters" onClick={()=>setSheet('filter')}><i className="ti ti-chevron-left"></i></button>
+              {fromFilter ? <button className="iconbtn" aria-label="Back to filters" onClick={()=>setSheet('filter')}><i className="ti ti-chevron-left"></i></button> : null}
               <h3 style={{margin:0}}>{FACET[sheet].title}</h3>
             </div>
             <div className="optlist">
@@ -431,7 +433,7 @@ function ShopScreen({ initialFilter, group, openSearch, category, initialQuery, 
             </div>
             <div className="sheetfoot">
               <button className="ghostbtn" onClick={FACET[sheet].reset}>Reset</button>
-              <button className="cta" onClick={()=>setSheet('filter')}>Done</button>
+              <button className="cta" onClick={()=>fromFilter ? setSheet('filter') : setSheet(null)}>Done</button>
             </div>
           </div>
         ) : null}
@@ -441,10 +443,10 @@ function ShopScreen({ initialFilter, group, openSearch, category, initialQuery, 
           <i className="ti ti-adjustments-horizontal"></i>
         </button>
         <div className="fpills">
-          <button className="fpill" data-on={sort !== 'Relevance' ? 'true' : undefined} onClick={()=>setSheet('sort')}>Sort by<i className="ti ti-chevron-down"></i></button>
+          <button className="fpill" data-on={sort !== 'Relevance' ? 'true' : undefined} onClick={()=>openFacet('sort')}>Sort by<i className="ti ti-chevron-down"></i></button>
           <button className="fpill" data-on={discountOnly ? 'true' : undefined} aria-pressed={discountOnly} onClick={()=>setDiscountOnly(v=>!v)}>On offer</button>
-          {hasCategoryFacet ? <button className="fpill" data-on={catValue !== 'All' ? 'true' : undefined} onClick={()=>setSheet('category')}>{cat ? 'Sub-category' : 'Category'}<i className="ti ti-chevron-down"></i></button> : null}
-          <button className="fpill" data-on={bands.length ? 'true' : undefined} onClick={()=>setSheet('price')}>Price<i className="ti ti-chevron-down"></i></button>
+          {hasCategoryFacet ? <button className="fpill" data-on={catValue !== 'All' ? 'true' : undefined} onClick={()=>openFacet('category')}>{cat ? 'Sub-category' : 'Category'}<i className="ti ti-chevron-down"></i></button> : null}
+          <button className="fpill" data-on={bands.length ? 'true' : undefined} onClick={()=>openFacet('price')}>Price<i className="ti ti-chevron-down"></i></button>
         </div>
       </div>
       {query || (!cat && !g && !coll) ? <SecLabel>{query ? 'Results' : g ? g.title : 'All products'}</SecLabel> : null}

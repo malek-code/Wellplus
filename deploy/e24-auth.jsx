@@ -37,7 +37,7 @@ function AuthTop({ onBack, onSkip }) {
   );
 }
 
-function Field({ label, type = 'text', value, onChange, placeholder, icon, help, error, autoFocus }) {
+function AuthField({ label, type = 'text', value, onChange, placeholder, icon, help, error, autoFocus }) {
   const [show, setShow] = React.useState(false);
   const pw = type === 'password';
   return (
@@ -136,8 +136,8 @@ function LoginScreen({ onBack, onForgot, onSignup, onDone }) {
           <h1>Welcome back</h1>
           <p>Log in to see your WellPlus balance, your orders and your saved addresses.</p>
         </div>
-        <Field label="Email" icon="mail" value={email} onChange={v=>{setEmail(v);setErr('');}} placeholder="ime@primjer.hr" error={err} autoFocus />
-        <Field label="Password" type="password" icon="lock" value={pw} onChange={setPw} placeholder="••••••••" />
+        <AuthField label="Email" icon="mail" value={email} onChange={v=>{setEmail(v);setErr('');}} placeholder="ime@primjer.hr" error={err} autoFocus />
+        <AuthField label="Password" type="password" icon="lock" value={pw} onChange={setPw} placeholder="••••••••" />
         <button className="alink" style={{alignSelf:'flex-start'}} onClick={onForgot}>Forgotten your password?</button>
       </div>
       <div className="authfoot" data-lift="true">
@@ -167,8 +167,8 @@ function SignupScreen({ onBack, onLogin, onDone, onLegal }) {
           <h1>Create your account</h1>
           <p>Your WellPlus membership starts with the account — points from the register are added to the same balance.</p>
         </div>
-        <Field label="Email" icon="mail" value={email} onChange={setEmail} placeholder="ime@primjer.hr" autoFocus />
-        <Field label="Password" type="password" icon="lock" value={pw} onChange={setPw} placeholder="Choose a password" />
+        <AuthField label="Email" icon="mail" value={email} onChange={setEmail} placeholder="ime@primjer.hr" autoFocus />
+        <AuthField label="Password" type="password" icon="lock" value={pw} onChange={setPw} placeholder="Choose a password" />
         <div className="pwrules">
           {rules.map(r=>(
             <span key={r.label} data-ok={r.ok}><i className={'ti ti-' + (r.ok ? 'circle-check' : 'circle')}></i>{r.label}</span>
@@ -198,7 +198,7 @@ function ForgotScreen({ onBack, onSent }) {
           <h1>Reset your password</h1>
           <p>Enter the email address on your account and we will send a link to set a new password. The link is valid for 24 hours.</p>
         </div>
-        <Field label="Email" icon="mail" value={email} onChange={setEmail} placeholder="ime@primjer.hr" autoFocus />
+        <AuthField label="Email" icon="mail" value={email} onChange={setEmail} placeholder="ime@primjer.hr" autoFocus />
       </div>
       <div className="authfoot">
         <button className="abtn" onClick={()=>onSent(email)} disabled={!email.includes('@')}>Send the link</button>
@@ -243,13 +243,13 @@ function NewPasswordScreen({ onBack, onDone }) {
           <h1>Set a new password</h1>
           <p>Choose a password you have not used on e24 before. You stay logged in on this device afterwards.</p>
         </div>
-        <Field label="New password" type="password" icon="lock" value={pw} onChange={setPw} placeholder="New password" autoFocus />
+        <AuthField label="New password" type="password" icon="lock" value={pw} onChange={setPw} placeholder="New password" autoFocus />
         <div className="pwrules">
           {rules.map(r=>(
             <span key={r.label} data-ok={r.ok}><i className={'ti ti-' + (r.ok ? 'circle-check' : 'circle')}></i>{r.label}</span>
           ))}
         </div>
-        <Field label="Repeat password" type="password" icon="lock-check" value={pw2} onChange={setPw2} placeholder="Repeat password" error={mismatch ? 'The two passwords do not match.' : ''} />
+        <AuthField label="Repeat password" type="password" icon="lock-check" value={pw2} onChange={setPw2} placeholder="Repeat password" error={mismatch ? 'The two passwords do not match.' : ''} />
       </div>
       <div className="authfoot">
         <button className="abtn" onClick={onDone} disabled={!rules.every(r=>r.ok) || pw !== pw2}>Save and log in</button>
