@@ -1,0 +1,7 @@
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font-ui);font-size:var(--size-body);color:var(--text-body);background:var(--surface-page);-webkit-font-smoothing:antialiased;font-synthesis-weight:none}
+a{color:var(--text-brand);text-decoration:none}
+a:hover{color:var(--sage-900)}
+button{font-family:inherit}
+::selection{background:var(--sage-100)}
+:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}

@@ -1,0 +1,161 @@
+/* Real catalogue data pulled from eljekarna24.hr and ljekarnaonline.hr — 3 Sep 2026.
+   Prices in EUR, Croatian formatting applied at render time. points = floor(price) (€1 = 1 point). */
+window.E24_PRODUCTS = [
+  {
+    id: "C041723",
+    brand: "MIKROZID",
+    name: "MIKROZID SENSITIVE OTOPINA 1L",
+    price: 9.66,
+    category: "Dezinficijensi i antiseptici",
+    source: "eljekarna24.hr",
+    url: "https://eljekarna24.hr/p/mikrozid-sensitive-otopina-za-dezinfekciju-povrsina/",
+    image: "https://cdn11.bigcommerce.com/s-2xoeaz93e6/images/stencil/500x659/products/4624/30355/C041723__1__62136.1776692820.jpg?c=1",
+    short: "Sredstvo bez alkohola za brzu dezinfekciju medicinskih uređaja i površina, na osnovi kvaternih amonijevih spojeva.",
+    pack: "1 litra"
+  },
+  {
+    id: "C041726",
+    brand: "MIKROZID",
+    name: "MIKROZID SENSITIVE MARAMICE A 200 PUNJENJE",
+    price: 11.38,
+    category: "Dezinficijensi i antiseptici",
+    source: "eljekarna24.hr",
+    url: "https://eljekarna24.hr/p/mikrozid-sensitive-maramice-za-dezinfekciju-povrsina/",
+    image: "https://cdn11.bigcommerce.com/s-2xoeaz93e6/images/stencil/500x659/products/4636/4746/mikrozidr-sensitive-maramice-punjenje-a-200-1_62260a487bfd2__05980.1743155814.jpg?c=1",
+    short: "Bezalkoholne maramice za čišćenje i dezinfekciju medicinskih proizvoda i svih vrsta površina.",
+    pack: "200 maramica punjenje"
+  },
+  {
+    id: "D100664",
+    brand: "MANUSAL",
+    name: "Manusal rukavice latex bez pudera 100 komada",
+    price: 9.28,
+    category: "Maske, rukavice i dezinficijensi",
+    source: "eljekarna24.hr",
+    url: "https://eljekarna24.hr/manusal-rukavice-latex-bez-pudera/",
+    image: "https://cdn11.bigcommerce.com/s-2xoeaz93e6/images/stencil/500x659/products/6077/37893/D100664__1__47265.1776770215.jpg?c=1",
+    short: "Rukavice latex bez pudera, elastične i otporne na klizanje, pružaju sigurnu zaštitu za ruke. Pakiranje sadrži 100 komada – profesionalno i praktično!",
+    pack: "100 komada",
+    variants: { label: "velicina", options: ["S", "M", "L", "XL"] }
+  },
+  {
+    id: "C060093",
+    brand: "MIKROZID",
+    name: "Mikrozid maramice za dezinfekciju površina 220 komada",
+    price: 22.40,
+    category: "Dezinficijensi i antiseptici",
+    source: "eljekarna24.hr",
+    url: "https://eljekarna24.hr/mikrozid-maramice-za-dezinfekciju-povrsina-220-komada/",
+    image: "https://cdn11.bigcommerce.com/s-2xoeaz93e6/images/stencil/500x659/products/12149/39788/schulke-mikrozid-af-maramice_220__93135.1779276716.jpg?c=1",
+    short: "Maramice impregnirane alkoholnom otopinom za dezinfekciju medicinskih uređaja i površina.",
+    pack: "220 komada"
+  },
+  {
+    id: "C031369",
+    brand: "Supradyn",
+    name: "Supradyn Kids Imuno Boost 100 žele bombona",
+    price: 27.53,
+    category: "Vitamini i minerali",
+    source: "ljekarnaonline.hr",
+    url: "https://ljekarnaonline.hr/proizvodi/dodaci-prehrani/vitamini-i-minerali/supradyn-kids-imuno-boost-zele-bom-a100-29022/",
+    image: "https://ljekarnaonline.hr/upload/catalog/product/29022/thumb/kids-imuno-boost_64f06aebc337e_580x580r.jpg",
+    short: "Supradyn Kids Imuno Boost sadrži vitamine C i D i cink koji igraju ulogu u normalnom funkcioniranju imunološkog sustava.",
+    pack: "100 žele bombona"
+  },
+  {
+    id: "C035186",
+    brand: "Hamapharm",
+    name: "Hamapharm Collagen Time Beauty 500ml 2+1",
+    price: 79.80,
+    category: "Akcijska pakiranja",
+    source: "ljekarnaonline.hr",
+    url: "https://ljekarnaonline.hr/proizvodi/pogodnosti-za-vas/akcijska-pakiranja/hamaph-collagen-time-beauty-500ml-21-34586/",
+    image: "https://ljekarnaonline.hr/upload/catalog/product/34586/thumb/collagentime-beauty-500ml-21-e1677668144451_642ab74cb10e5_580x580r.png",
+    short: "",
+    pack: "3 × 500 ml (2+1)"
+  },
+  {
+    id: "C032039",
+    brand: "Almagea",
+    name: "Almagea® SHINE ON+ 45 kapsula",
+    price: 26.46,
+    category: "Koža, kosa, nokti",
+    source: "ljekarnaonline.hr",
+    url: "https://ljekarnaonline.hr/proizvodi/dodaci-prehrani/zdravlje-i-ljepota/koza-kosa-nokti/almagea-shine-on-caps-a45-29747/",
+    image: "https://ljekarnaonline.hr/upload/catalog/product/29747/thumb/almagea-shine-on-2022_6284bbc48b52d_580x580r.jpg",
+    short: "Dodatak prehrani za zdravlje i ljepotu kose, kože i noktiju.",
+    pack: "45 Licaps® Vcaps® Plus kapsula"
+  },
+  {
+    id: "C060320",
+    brand: "Vital Proteins",
+    name: "Vital Proteins Collagen Peptides, kolagen peptidi bez okusa u vrećicama 10 x 10 g",
+    price: 21.99,
+    category: "Podrška mišićima i zglobovima",
+    source: "centarzdravihrjesenja.hr",
+    url: "https://centarzdravihrjesenja.hr/vital-proteins-collagen-peptides-kolagen-peptidi-bez-okusa-u-vrecicama-10-x-10-g/",
+    image: "https://cdn11.bigcommerce.com/s-zmgdyj2jxr/images/stencil/500x659/products/475/947/Vital_Proteins_Collagen_Peptidi_A10__04096__98490.1766046839.386.513__07607.1768299249.jpg?c=1",
+    short: "Ove praktične Vital Proteins Collagen Peptidi vrećice omogućuju jednostavan, bioraspoloživ unos goveđeg kolagena u prahu bilo kada i bilo gdje, podržavajući prirodne razine kolagena u tijelu.",
+    pack: "10 vrećica po 10 g"
+  },
+  {
+    id: "C059942",
+    brand: "Yuwell",
+    name: "Yuwell toaletna kolica za kućnu njegu bolesnika",
+    price: 174.30,
+    category: "Oprema za njegu kod kuće",
+    source: "centarzdravihrjesenja.hr",
+    url: "https://centarzdravihrjesenja.hr/yuwell-toaletna-kolica-za-kucnu-njegu-bolesnika/",
+    image: "https://cdn11.bigcommerce.com/s-zmgdyj2jxr/images/stencil/500x659/products/470/941/YUWELL_TOALETNA_KOLICA_H032B__59976__76996.1766046794.386.513__76665.1768299242.jpg?c=1",
+    short: "Kombinacija invalidskih kolica i toaletnog stolca. Sigurni kotači s pojedinačnim kočnicama, podesivi oslonci za noge i praktičnost za kućnu njegu ili domove za starije.",
+    pack: "Model H032B"
+  },
+  {
+    id: "C059939",
+    brand: "Yuwell",
+    name: "Yuwell sklopivi štap za hodanje s ergonomskom drškom",
+    price: 11.25,
+    category: "Kućna oprema za njegu bolesnika",
+    source: "centarzdravihrjesenja.hr",
+    url: "https://centarzdravihrjesenja.hr/yuwell-sklopivi-stap-za-hodanje-s-ergonomskom-drskom/",
+    image: "https://cdn11.bigcommerce.com/s-zmgdyj2jxr/images/stencil/500x659/products/467/938/YUWELL_STAP_ZA_HODANJE_NA_SKLAPANJE_YU838__35023__78783.1766046856.386.513__30580.1768299237.jpg?c=1",
+    short: "Lagan i sklopivi štap, idealan za putovanja i svakodnevnu upotrebu. Protuklizna baza i ergonomska drška za sigurnost i udobnost.",
+    pack: "Model YU838"
+  },
+  {
+    id: "C023177",
+    brand: "Apipharma",
+    name: "Apipharma Apivit Multi sirup 100 ml",
+    price: 9.99,
+    category: "Imunitet, vitamini i liječenje djece",
+    source: "ljekarnaonline.hr",
+    url: "https://ljekarnaonline.hr/proizvodi/djecji-proizvodi/samolijecenje-beba-i-djece/imunitet-i-vitamini-djecu/api-apivit-multi-sirup-100ml-19247/",
+    image: "https://ljekarnaonline.hr/upload/catalog/product/19247/thumb/multi_5bd17d6e5fc8d_580x580r.jpg",
+    short: "Apivit® tekući dodatak prehrani s medom i vitaminima za djecu i odrasle preporučujemo kao vitaminsku dopunu prehrani, osobito u zimi i proljeće, kod djece sa smanjenim apetitom, kod premorene školske djece slabe koncentracije i pojačanog umora.",
+    pack: "100 ml"
+  },
+  {
+    id: "C005213",
+    brand: "Supradyn",
+    name: "Supradyn® Energija 30 filmom obloženih tableta",
+    price: 21.62,
+    category: "Vitamini i minerali",
+    source: "ljekarnaonline.hr",
+    url: "https://ljekarnaonline.hr/proizvodi/dodaci-prehrani/vitamini-i-minerali/supradyn-q10-tbla30-bayer-1274/",
+    image: "https://ljekarnaonline.hr/upload/catalog/product/1274/thumb/supradyn-energija-30-tableta_64f068b65820e_580x580r.jpg",
+    short: "Supradyn® Energija je multivitaminski pripravak s mineralima i koenzimom Q10, koji služi kao dodatak prehrani tijekom cijeloga dana.",
+    pack: "30 tableta"
+  },
+  {
+    id: "C031368",
+    brand: "Supradyn",
+    name: "Supradyn® Imuno Boost 20 šumećih tableta",
+    price: 19.83,
+    category: "Vitamini i minerali",
+    source: "ljekarnaonline.hr",
+    url: "https://ljekarnaonline.hr/proizvodi/dodaci-prehrani/vitamini-i-minerali/supradyn-imuno-boost-eff-a20-29021/",
+    image: "https://ljekarnaonline.hr/upload/catalog/product/29021/thumb/supradyn-imuno-boost-vitamin-c-vitamin-d-cink-sume_616942bc7df8b_580x580r.jpg",
+    short: "Supradyn Imuno Boost - dodatak prehrani temeljen na vitaminima C i D i cinku, koji pridonose normalnom funkcioniranju imunološke tablete. S ugodnim okusom naranče.",
+    pack: "20 šumećih tableta"
+  }
+];
