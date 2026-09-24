@@ -2,13 +2,6 @@ const { ListRow, Field, TextInput, Switch, Banner, StatusBadge, Checkbox } = win
 
 const LABELS = ['Home', 'Work', 'Other'];
 
-const PHARMACIES = [
-  { id:'ilica191', name:'Ljekarna Švaljek — Ilica 191', addr:'Ilica 191, 10000 Zagreb', dist:'0,4 km', hours:'07:00–21:00', free:'Ready today after 16:00', x:36, y:40 },
-  { id:'kvatric', name:'Ljekarna Švaljek — Kvaternikov trg', addr:'Kvaternikov trg 12, 10000 Zagreb', dist:'1,8 km', hours:'07:00–20:00', free:'Ready today after 18:00', x:62, y:32 },
-  { id:'dubrava', name:'Ljekarna Švaljek — Dubrava', addr:'Avenija Dubrava 47, 10040 Zagreb', dist:'4,6 km', hours:'08:00–20:00', free:'Ready tomorrow morning', x:56, y:70 },
-  { id:'sesvete', name:'Ljekarna Švaljek — Sesvete', addr:'Ninska 1, 10360 Sesvete', dist:'11,2 km', hours:'07:30–20:00', free:'Ready tomorrow morning', x:20, y:62 }
-];
-
 const LOCKERS = [
   { id:'ilica', name:'Ilica 191', op:'Parcel locker', addr:'Ilica 191, 10000 Zagreb', dist:'0,4 km', hours:'Open 24 h', free:'Parcel locker', x:34, y:42 },
   { id:'vrbani', name:'Tommy Vrbani', op:'Pickup shop', addr:'Horvaćanska cesta 88, 10000 Zagreb', dist:'1,2 km', hours:'07:00–22:00', free:'Hand over at the counter', x:63, y:28 },
@@ -35,7 +28,7 @@ function AddressForm({ title, initial, onCancel, onSave, cta = 'Save address', f
         <button className="cta" onClick={save}>{cta}<i className="ti ti-check" style={{fontSize:18}}></i></button>
       </div>
     }>
-      {first ? <Banner tone="quiet">The name on this address becomes the name on your WellPlus card.</Banner> : null}
+      {first ? <Banner tone="quiet">{`The name on this address becomes the name on your ${PROGRAMME} card.`}</Banner> : null}
       <SecLabel>Label</SecLabel>
       <div className="chiprow">
         {LABELS.map(l => <button key={l} className="fchip" aria-pressed={f.label === l} onClick={() => setF({ ...f, label:l })}>{l}</button>)}
@@ -113,7 +106,7 @@ function AddressesScreen() {
           </div>
         ))}
       </div>
-      <p className="tiny">The name on your default address is the name printed on your WellPlus card.</p>
+      <p className="tiny">{`The name on your default address is the name shown on your ${PROGRAMME} card.`}</p>
     </Shell>
   );
 }
@@ -190,18 +183,4 @@ function LockerPicker(p) {
     cta={p.cta || 'Use this locker'} />;
 }
 
-function PharmacyPicker(p) {
-  return <PlacePicker {...p}
-    title="Pick-up pharmacy" items={PHARMACIES} glyph="building-store"
-    secLabel="Ljekarne Švaljek" aside="pharmacies" placeholder="Search by street or district"
-    mechanics={[['bell','We notify you as soon as the order is ready to collect.'],['calendar','The order waits 5 days at the counter.'],['rosette-discount','Show your WellPlus QR at the register to use points instead.']]}
-    cta={p.cta || 'Use this pharmacy'} />;
-}
-
-function LockerScreen() {
-  const nav = useNav();
-  const [sel, setSel] = React.useState('ilica');
-  return <LockerPicker value={sel} onChange={setSel} onBack={nav.back} onConfirm={nav.back} cta="Save as my locker" showPrice={false} />;
-}
-
-Object.assign(window, { AddressesScreen, AddressForm, PlacePicker, LockerPicker, PharmacyPicker, LockerScreen, LOCKERS, PHARMACIES, LABELS, EMPTY_ADDRESS: EMPTY, fmtAddress: fmt });
+Object.assign(window, { AddressesScreen, AddressForm, PlacePicker, LockerPicker, LOCKERS, LABELS, EMPTY_ADDRESS: EMPTY, fmtAddress: fmt });

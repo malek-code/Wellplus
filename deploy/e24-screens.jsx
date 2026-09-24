@@ -38,6 +38,7 @@ const CATALOGUE = [
   { key:'multiroyal', image:'https://cdn11.bigcommerce.com/s-2xoeaz93e6/images/stencil/500x659/products/6077/37893/D100664__1__47265.1776770215.jpg?c=1', name:'Manusal rukavice latex bez pudera', size:'100 komada · S–XL', price:'€9,28', cat:'First aid' },
   { key:'biotin', image:'https://cdn11.bigcommerce.com/s-zmgdyj2jxr/images/stencil/500x659/products/467/938/YUWELL_STAP_ZA_HODANJE_NA_SKLAPANJE_YU838__35023__78783.1766046856.386.513__30580.1768299237.jpg?c=1', name:'Yuwell sklopivi štap za hodanje', size:'Model YU838', price:'€11,25', cat:'First aid' }
 ];
+CATALOGUE.forEach(p => { p.pkey = p.key; p.promo = PROMOTIONS[PROMO_BY_KEY[p.key]] || null; p.oos = OUT_OF_STOCK.includes(p.key); });
 const PRICE_BANDS = [
   { label:'Under €10', test:v => v < 10 },
   { label:'€10 – €20', test:v => v >= 10 && v <= 20 },
@@ -66,7 +67,7 @@ const FEATURED_LINE = { 'Vitamins & minerals':'Pharmacist picks for cold season'
 const SORTS = ['Relevance', 'Newest', 'Price: low to high', 'Price: high to low'];
 const formOf = p => /capsule|kapsul/i.test(p.size) ? 'Capsules' : /tablet/i.test(p.size) ? 'Tablets' : /softgel|bombon/i.test(p.size) ? 'Softgels' : /ml|litra|sirup/i.test(p.size) ? 'Liquid' : 'Other';
 const FORMS = ['Capsules','Tablets','Softgels','Liquid'];
-const inStockToday = p => p.key.charCodeAt(0) % 2 === 0;
+const inStock = p => !p.oos;
 const priceNum = s => parseFloat(s.replace('€','').replace('.','').replace(',','.'));
 const GROUPS = {
   'new-arrivals': { title:'New arrivals', keys:['selenium','betacarotene'] },
@@ -79,7 +80,7 @@ const GROUPS = {
 const PROMOS = [
   { group:'immunity', tone:'plum', wash:'#1C4C1B', eyebrow:'Autumn immunity', title:'Getting ready for the cold months', note:'Vitamin C, D3 and selenium — the three most asked for at the counter.', cta:'See immunity picks', art:'assets/campaign-capsule.jpg' },
   { group:'beauty', tone:'forest', wash:'#386284', eyebrow:'Top rated in beauty', title:'What our customers rate highest', note:'The three best-reviewed supplements for skin, hair and nails.', cta:'See the selection', art:'2761-mtbo96vm-ld1y.jpg' },
-  { group:'new-arrivals', tone:'clay', wash:'#4A3326', eyebrow:'New arrivals', title:'Just landed on the shelf', note:'Two additions this month, in stock in 21 pharmacies.', cta:'See new arrivals', art:'2149080570-mtboeft4-ygty.jpg' }
+  { group:'new-arrivals', tone:'clay', wash:'#4A3326', eyebrow:'New arrivals', title:'Just landed on the shelf', note:'Two additions this month.', cta:'See new arrivals', art:'2149080570-mtboeft4-ygty.jpg' }
 ];
 const FILTERS = ['All', 'Vitamins & minerals', 'Face & body care', 'Mom & baby', 'First aid', 'Oral care'];
 
@@ -336,7 +337,7 @@ function ShopScreen({ initialFilter, group, openSearch, category, initialQuery, 
     form: forms.length ? forms.join(', ') : 'Any',
     category: catValue,
     offer: discountOnly ? 'Only on offer' : 'Any',
-    stock: stockOnly ? 'In stock today' : 'Any'
+    stock: stockOnly ? 'In stock' : 'Any'
   };
   const facetRows = [
     ['sort','Sort by'],
@@ -354,14 +355,14 @@ function ShopScreen({ initialFilter, group, openSearch, category, initialQuery, 
     price: { title:'Price', multi:true, options:PRICE_BANDS.map(b=>b.label), value:bands, set:l=>toggleBand(l), reset:()=>setBands([]) },
     form: { title:'Form', multi:true, options:FORMS, value:forms, set:l=>toggle(setForms, l), reset:()=>setForms([]) },
     offer: { title:'On offer', multi:false, options:['Any','Only on offer'], value:[discountOnly?'Only on offer':'Any'], set:v=>setDiscountOnly(v==='Only on offer'), reset:()=>setDiscountOnly(false) },
-    stock: { title:'Availability', multi:false, options:['Any','In stock today'], value:[stockOnly?'In stock today':'Any'], set:v=>setStockOnly(v==='In stock today'), reset:()=>setStockOnly(false) }
+    stock: { title:'Availability', multi:false, options:['Any','In stock'], value:[stockOnly?'In stock':'Any'], set:v=>setStockOnly(v==='In stock'), reset:()=>setStockOnly(false) }
   };
   let list = (coll ? byKeys(coll.keys) : g ? byKeys(g.keys) : cat ? CATALOGUE.filter(p => p.cat === cat) : CATALOGUE)
     .filter(p => coll || g || cat || active === 'All' || p.cat === active)
     .filter(p => !query || p.name.toLowerCase().includes(query.toLowerCase()))
     .filter(p => !bands.length || bands.some(l => PRICE_BANDS.find(b => b.label === l).test(priceNum(p.price))))
     .filter(p => !forms.length || forms.includes(formOf(p)))
-    .filter(p => !stockOnly || inStockToday(p))
+    .filter(p => !stockOnly || inStock(p))
     .filter(p => !discountOnly || p.was)
     .filter(p => !sub || (subs.find(x => x.label === sub) || {test:()=>true}).test(p));
   if (sort === 'Price: low to high') list = list.slice().sort((a,b)=>priceNum(a.price)-priceNum(b.price));
@@ -461,7 +462,6 @@ function ShopScreen({ initialFilter, group, openSearch, category, initialQuery, 
           <button className="fchip" style={{marginTop:12}} onClick={()=>{setQuery('');setActive('All');setBands([]);setForms([]);setStockOnly(false);setDiscountOnly(false);setSub(null);}}>Show all products</button>
         </div>
       ) : null}
-      <p className="tiny">Every €1 spent earns 1 point. Prescription medicines and co-payments earn no points.</p>
     </Screen>
   );
 }
@@ -472,12 +472,27 @@ function qrCells(seed) {
   const out = []; for (let i=0;i<QN*QN;i++) { h = (h*1103515245 + 12345) >>> 0; out.push((h>>>16)%100 < 46); }
   return out;
 }
-const QGRID = qrCells('WP-4820-1176');
+const QGRID = qrCells('member-qr-demo');
 const isFinder = (r,c)=>(r<7&&c<7)||(r<7&&c>=QN-7)||(r>=QN-7&&c<7);
 
 const ptsFmt = n => String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 const ptsEur = n => (Math.abs(n)/100).toFixed(2).replace('.', ',');
-function LedgerRow({ description, date, channel, delta = 0, pending, onClick, last }) {
+
+/* D-04: one list for online and in-store. kind: purchase | redeem | refund | bonus.
+   Refunds are their own rows and are not counted as "Spent". */
+const LEDGER = [
+  { kind:'purchase', description:'Purchase · Zagreb', date:'21 Aug 2026', channel:'Store', delta:41, pending:true },
+  { kind:'redeem', description:'Points used on order WP-20826-441', date:'21 Aug 2026', channel:'App', delta:-400, order:'WP-20826-441' },
+  { kind:'bonus', description:'Birthday bonus', date:'18 Aug 2026', channel:'App', delta:50 },
+  { kind:'purchase', description:'Order WP-20812-208', date:'12 Aug 2026', channel:'App', delta:24, order:'WP-20812-208' },
+  { kind:'purchase', description:'Order WP-20804-119', date:'4 Aug 2026', channel:'e24 web', delta:128, order:'WP-20804-119' },
+  { kind:'purchase', description:'Purchase · Centar zdravih rješenja', date:'29 Jul 2026', channel:'Centar zdravih rješenja web', delta:87 },
+  { kind:'purchase', description:'Purchase · Varaždin', date:'17 Jul 2026', channel:'Store', delta:52 },
+  { kind:'refund', description:'Refund on order WP-20729-076', date:'9 Jul 2026', channel:'App', delta:-18, order:'WP-20729-076' },
+  { kind:'bonus', description:'Welcome bonus', date:'2 Jul 2026', channel:'App', delta:50 }
+];
+
+function LedgerRow({ description, date, channel, delta = 0, pending, kind, onClick, last }) {
   const positive = delta > 0;
   return (
     <button className="lrow" data-last={last ? 'true' : undefined} onClick={onClick}>
@@ -487,35 +502,36 @@ function LedgerRow({ description, date, channel, delta = 0, pending, onClick, la
       </span>
       <span className="lright">
         <span className={'delta' + (pending ? ' pending' : positive ? '' : ' neg')}>{(positive ? '+' : '\u2212') + ptsFmt(delta) + ' pts'}</span>
-        {pending ? <span className="meta">Processing</span> : null}
+        {pending ? <span className="meta">Processing</span> : kind === 'redeem' ? <span className="meta">{'€' + ptsEur(delta) + ' saved'}</span> : null}
       </span>
       <i className="ti ti-chevron-right"></i>
     </button>
   );
 }
 function MovementSheet({ item, onClose }) {
+  const nav = useNav();
   const it = item || {};
   const positive = it.delta > 0;
   const note = it.pending
-    ? 'This movement is still settling. In-store purchases can take a few hours to appear in your balance.'
-    : positive
-      ? 'Earned at 1 point for every €1 spent.'
-      : it.description && /refund/i.test(it.description)
-        ? 'A refund removes the points the purchase earned.'
-        : 'Redeemed at 100 points = €1.';
+    ? 'This purchase is still being processed. Points from in-store purchases appear within a few minutes.'
+    : it.kind === 'bonus' ? 'Bonus points are added to your balance like any other points.'
+    : it.kind === 'refund' ? 'A refund removes the points the purchase earned.'
+    : it.kind === 'redeem' ? VALUE_LINE
+    : EARN_LINE;
   return (
     <Sheet open={!!item} onClose={onClose} top="30%">
       <div className="fsheet infosheet">
-        <span className="bigglyph"><i className={'ti ti-' + (it.pending ? 'clock' : positive ? 'coin' : 'discount')}></i></span>
+        <span className="bigglyph"><i className={'ti ti-' + (it.pending ? 'clock' : it.kind === 'bonus' ? 'gift' : it.kind === 'refund' ? 'receipt-refund' : positive ? 'coin' : 'discount')}></i></span>
         <h3>{it.description}</h3>
         <div className="card" style={{padding:16,width:'100%'}}>
           <div className="kvrow"><span>Date</span><b>{it.date}</b></div>
-          <div className="kvrow"><span>Where</span><b>{it.channel}</b></div>
-          <div className="kvrow"><span>Points</span><b className="num">{(positive ? '+' : '\u2212') + ptsFmt(it.delta || 0)}</b></div>
-          <div className="kvrow last"><span>Value</span><b>{'€' + ptsEur(it.delta || 0)}</b></div>
+          <div className="kvrow"><span>Channel</span><b>{it.channel}</b></div>
+          <div className={'kvrow' + (it.kind === 'redeem' ? '' : ' last')}><span>Points</span><b className="num">{(positive ? '+' : '\u2212') + ptsFmt(it.delta || 0)}</b></div>
+          {it.kind === 'redeem' ? <div className="kvrow last"><span>Saved</span><b>{'€' + ptsEur(it.delta || 0)}</b></div> : null}
         </div>
         <p className="body">{note}</p>
         <div className="sheetfoot">
+          {it.order ? <button className="ghostbtn" onClick={()=>{ onClose(); nav.go('order:' + it.order); }}>{'View order ' + it.order}</button> : null}
           <button className="cta" onClick={onClose}>Close</button>
         </div>
       </div>
@@ -523,19 +539,29 @@ function MovementSheet({ item, onClose }) {
   );
 }
 
+/* G-03: the only way the economics is written. */
+const EARN_LINE = 'Every euro spent earns 1 point';
+const VALUE_LINE = '100 points = 1 euro off';
+const HOW_POINTS = [
+  ['coin', EARN_LINE],
+  ['discount', VALUE_LINE],
+  ['building-store','Points count in all 21 pharmacies, on eljekarna24.hr, at Centar zdravih rješenja and in this app.'],
+  ['toggle-right','In the app: one switch at checkout, from 100 points upward.'],
+  ['id-badge-2','In store: show your card and tell the cashier you would like to use your points.'],
+  ['calendar','Points are valid for 24 months.']
+];
+
+/* D1 — the first view of the Wellplus tab, with entry points to D3 and D4 (N-02). */
 function CardScreen() {
   const nav = useNav();
   const verified = useVerified();
   const [wallet, setWallet] = React.useState(false);
   const [movement, setMovement] = React.useState(null);
-  const [intro, setIntro] = React.useState(() => { try { return !localStorage.getItem(POINTS_INTRO_KEY); } catch (e) { return true; } });
-  const closeIntro = () => { try { localStorage.setItem(POINTS_INTRO_KEY, '1'); } catch (e) {} setIntro(false); };
   const [focus, setFocus] = React.useState(false);
   const [focusIn, setFocusIn] = React.useState(false);
   const MEMBER_NAME = 'Iva Jurašin';
   const cardRef = React.useRef(null);
   const qrRef = React.useRef(null);
-  const EASE = 'cubic-bezier(.2,.6,.25,1)';
   const zoomTransform = () => {
     const card = cardRef.current, qr = qrRef.current;
     const phone = card && card.closest('.phone');
@@ -552,10 +578,7 @@ function CardScreen() {
     const card = cardRef.current;
     if (!card) return;
     setFocus(true);
-    requestAnimationFrame(()=>{
-      setFocusIn(true);
-      card.style.transform = zoomTransform();
-    });
+    requestAnimationFrame(()=>{ setFocusIn(true); card.style.transform = zoomTransform(); });
   };
   const closeFocus = () => {
     const card = cardRef.current;
@@ -563,7 +586,7 @@ function CardScreen() {
     if (card) card.style.transform = '';
     setTimeout(()=>setFocus(false), 380);
   };
-  const qrCells = (
+  const cells = (
     <React.Fragment>
       {QGRID.map((on,i)=>{const r=Math.floor(i/QN),c=i%QN;return <span key={i} style={{background:isFinder(r,c)?'transparent':on?'var(--ink-900)':'transparent'}}></span>;})}
       <span className="finder" style={{top:0,left:0}}></span>
@@ -572,118 +595,101 @@ function CardScreen() {
     </React.Fragment>
   );
   return (
-    <Screen active="Card" title="WellPlus" tight
+    <Screen active="Card" title={PROGRAMME} tight
       overlay={<React.Fragment>
         {focus ? (
           <div className="qrfocus" data-on={focusIn ? 'true' : undefined} onClick={closeFocus}>
             <button className="qrexit" onClick={closeFocus} aria-label="Exit scanning mode"><i className="ti ti-x"></i><span>Close</span></button>
           </div>
         ) : null}
-        <Sheet open={intro} onClose={closeIntro} top="16%">
-          <div className="fsheet infosheet">
-            <span className="bigglyph"><i className="ti ti-rosette-discount"></i></span>
-            <h3>How WellPlus points work</h3>
-            <p className="body">Every purchase at Ljekarne Švaljek turns into a discount you can use whenever you like.</p>
-            <ul className="mechanic">
-              {HOW_POINTS.map(([icon,text])=><li key={text}><i className={'ti ti-'+icon}></i><span>{text}</span></li>)}
-            </ul>
-            <div className="sheetfoot">
-              <button className="cta" onClick={closeIntro}>Got it</button>
-            </div>
-          </div>
-        </Sheet>
         <MovementSheet item={movement} onClose={()=>setMovement(null)} />
       </React.Fragment>}
-      action={<React.Fragment>
-      <button className="iconbtn" onClick={()=>setIntro(true)} aria-label="How points work"><i className="ti ti-info-circle"></i></button>
-      <AppIcon icon="search" label="Search" onClick={()=>nav.go('search')} />
-      <CartAction onClick={()=>nav.go('cart')} />
-    </React.Fragment>}>
+      action={<button className="iconbtn" onClick={()=>nav.go('programme')} aria-label="How points work"><i className="ti ti-info-circle"></i></button>}>
       {!verified ? <StateBanner icon="mail-exclamation" title="Your card is waiting on your email">The QR code works once you open the confirmation link we sent. Until then, points cannot be added at the register.</StateBanner> : null}
       <div className="ptsbox">
         <div className="ptsleft">
-          <div className="lbl">Your WellPlus balance</div>
+          <div className="lbl">Your points</div>
           <span className="num">1.247</span>
         </div>
         <span className="eur">≈ €12,47 to spend</span>
       </div>
       <div className="hero memcard tilt" ref={cardRef} data-focus={focus ? 'true' : undefined} data-focusin={focusIn ? 'true' : undefined} style={{gap:18}}>
         <div className="qrpanel qrtap" ref={qrRef} role="button" tabIndex={0} aria-label="Enlarge code for scanning" onClick={()=>{ if (focus) closeFocus(); else openFocus(); }} onKeyDown={e=>{if(e.key==='Enter'||e.key===' ')openFocus();}} style={{position:'relative'}}>
-          <div className="qrgrid" style={{gridTemplateColumns:'repeat('+QN+',1fr)'}}>{qrCells}</div>
-          <span className="memno">WP-4820-1176</span>
+          <div className="qrgrid" style={{gridTemplateColumns:'repeat('+QN+',1fr)'}}>{cells}</div>
         </div>
         <div className="cardfade" style={{position:'relative',display:'flex',flexDirection:'column',alignItems:'center',textAlign:'center',gap:2}}>
-          {MEMBER_NAME ? (
-            <React.Fragment>
-              <div className="memname">{MEMBER_NAME}</div>
-              <div className="memsince">Member since 2024</div>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              <div className="memsince" style={{marginTop:0}}>Member since 2024</div>
-              <div className="memnamehint" style={{maxWidth:'26ch'}}>Your name appears here after your first delivery address</div>
-            </React.Fragment>
-          )}
+          {MEMBER_NAME
+            ? <div className="memname">{MEMBER_NAME}</div>
+            : <div className="memnamehint" style={{maxWidth:'26ch'}}>Your name appears here after your first delivery address</div>}
         </div>
       </div>
-      <p className="body" style={{textAlign:'center',padding:'0 8px'}}>Show this code at the register in any of the 21 pharmacies. Points are added to your balance within a few hours.</p>
+      <p className="body" style={{textAlign:'center',padding:'0 8px'}}>Show this code at the register in any of the 21 pharmacies. Points are added to your balance within a few minutes.</p>
       <button className="ghostbtn" onClick={()=>setWallet(true)}><i className={'ti ti-'+(wallet?'check':'wallet')} style={{fontSize:17}}></i>{wallet ? 'Added to your wallet' : 'Add to Apple / Google Wallet'}</button>
-      {wallet ? <Banner tone="info" icon="check">Your WellPlus card is in your wallet. The QR stays valid even if your balance changes.</Banner> : null}
-      <SecLabel aside="Last 30 days">Recent activity</SecLabel>
-      <div className="card">
-        {LEDGER.slice(0,5).map((h,i,a)=><LedgerRow key={i} {...h} last={i===a.length-1} onClick={()=>setMovement(h)} />)}
+      {wallet ? <Banner tone="info" icon="check">The pass in your wallet carries your QR code and name. Check your balance here in the app.</Banner> : null}
+      <div className="rowlist">
+        <a href="#" onClick={e=>{e.preventDefault();nav.go('programme');}}><span style={{display:'flex',alignItems:'center',gap:12}}><i className="ti ti-rosette-discount"></i>{`How ${PROGRAMME} works`}</span><i className="ti ti-chevron-right"></i></a>
+        <a href="#" onClick={e=>{e.preventDefault();nav.go('history');}}><span style={{display:'flex',alignItems:'center',gap:12}}><i className="ti ti-list"></i>Points history</span><i className="ti ti-chevron-right"></i></a>
       </div>
-      <button className="ghostbtn" onClick={()=>nav.go('history')}><i className="ti ti-list" style={{fontSize:17}}></i>All movements</button>
-      <p className="tiny">+41 pts from a recent purchase is still processing and will appear in your balance shortly. In-store purchases can take a few hours to settle.</p>
+      <SecLabel>Recent activity</SecLabel>
+      <div className="card">
+        {LEDGER.slice(0,4).map((h,i,a)=><LedgerRow key={i} {...h} last={i===a.length-1} onClick={()=>setMovement(h)} />)}
+      </div>
       <div className="quiet">
         <ul className="mechanic">
-          <li><i className="ti ti-wifi-off"></i><span>Works offline — the code is stored on this device.</span></li>
-          <li><i className="ti ti-discount"></i><span>100+ points? Tell the cashier you'd like to redeem — no step in the app needed.</span></li>
-          <li><i className="ti ti-infinity"></i><span>Points never expire. 100 points = €1.</span></li>
+          <li><i className="ti ti-wifi-off"></i><span>Works offline. The code is stored on this device.</span></li>
+          <li><i className="ti ti-discount"></i><span>100+ points? Tell the cashier you would like to use them. No step in the app is needed.</span></li>
         </ul>
       </div>
-      <p className="tiny" style={{textAlign:'center'}}>Your name comes from your first delivery address. The card works normally without it.</p>
     </Screen>
   );
 }
 
-const LEDGER = [
-  { description:'Purchase · Ljekarna Švaljek, Zagreb', date:'21 Aug 2026', channel:'Store', delta:41, pending:true },
-  { description:'Purchase · e24 app', date:'18 Aug 2026', channel:'App', delta:63 },
-  { description:'Redeemed at checkout', date:'12 Aug 2026', channel:'App', delta:-400 },
-  { description:'Purchase · eljekarna24.hr', date:'4 Aug 2026', channel:'e24.hr', delta:128 },
-  { description:'Purchase · Centar zdravih rješenja', date:'29 Jul 2026', channel:'CZR', delta:87 },
-  { description:'Purchase · Ljekarna Švaljek, Varaždin', date:'17 Jul 2026', channel:'Store', delta:52 },
-  { description:'Refund · returned item', date:'9 Jul 2026', channel:'Store', delta:-18 }
-];
+/* D3 — programme overview. */
+function ProgrammeScreen() {
+  const nav = useNav();
+  const bal = 1247, toNext = 100 - (bal % 100);
+  return (
+    <Screen active="Card" title={`How ${PROGRAMME} works`} onBack={nav.back}>
+      <div className="card" style={{display:'flex',flexDirection:'column',gap:12}}>
+        <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:12}}>
+          <span><span className="microlabel">Your points</span><span style={{display:'block',fontFamily:'var(--font-numeric)',fontSize:30,fontWeight:500,fontVariantNumeric:'tabular-nums',marginTop:4}}>1.247</span></span>
+          <b style={{fontFamily:'var(--font-numeric)',fontSize:17,fontWeight:500,paddingBottom:4}}>€12,47</b>
+        </div>
+        <PointsRange balance={bal % 100} threshold={100} scaleMax={100} showScale={false} />
+        <p className="tiny" style={{margin:0}}>{toNext + ' points to the next euro off.'}</p>
+      </div>
+      <SecLabel>How it works</SecLabel>
+      <Mechanic items={HOW_POINTS} />
+      <div className="rowlist">
+        <a href="#" onClick={e=>{e.preventDefault();nav.go('history');}}><span style={{display:'flex',alignItems:'center',gap:12}}><i className="ti ti-list"></i>Points history</span><i className="ti ti-chevron-right"></i></a>
+        <a href="#" onClick={e=>{e.preventDefault();nav.go('faq');}}><span style={{display:'flex',alignItems:'center',gap:12}}><i className="ti ti-help"></i>FAQ</span><i className="ti ti-chevron-right"></i></a>
+      </div>
+    </Screen>
+  );
+}
 
-const POINTS_INTRO_KEY = 'e24-points-intro-seen';
-const HOW_POINTS = [
-  ['coin','€1 spent = 1 point — in all 21 pharmacies, on eljekarna24.hr, in this app and at Centar zdravih rješenja.'],
-  ['discount','100 points = €1, redeemable from 100 points upward.'],
-  ['toggle-right','In the app: one switch at checkout — no amount to type in.'],
-  ['building-store','In store: just tell the cashier you\'d like to use your points.'],
-  ['infinity','Points never expire.']
-];
+const PointsScreen = CardScreen;
 
-const PointsScreen = CardScreen; // merged: the card screen now carries the balance and activity
-
-function PointsHistoryScreen() {
+/* D4 — points history. negative: the balance is below zero after a refund. */
+function PointsHistoryScreen({ negative }) {
   const nav = useNav();
   const [movement, setMovement] = React.useState(null);
   const [filter, setFilter] = React.useState('all');
-  const rows = LEDGER.filter(r=>filter==='all' || (filter==='earned' ? r.delta>0 : r.delta<0));
+  const rows = LEDGER.filter(r=>filter==='all' || (filter==='earned' ? r.delta>0 : r.kind==='redeem'));
   return (
     <OverlayCtx.Provider value={<MovementSheet item={movement} onClose={()=>setMovement(null)} />}>
-    <Shell title="All movements" onBack={nav.back}>
+    <Shell title="Points history" onBack={nav.back}>
+      {negative ? (
+        <StateBanner icon="alert-circle" title="Your balance is −15 points">A refund exceeded your available balance. Future purchases bring it back up to zero, then beyond.</StateBanner>
+      ) : null}
       <SegmentedControl value={filter} onChange={setFilter} options={[{value:'all',label:'All'},{value:'earned',label:'Earned'},{value:'spent',label:'Spent'}]} />
       <div className="card">
         {rows.map((h,i,a)=><LedgerRow key={i} {...h} last={i===a.length-1} onClick={()=>setMovement(h)} />)}
       </div>
-      <Banner tone="quiet">Points from in-store purchases settle within a few hours. Refunds remove the points the purchase earned.</Banner>
+      <Banner tone="quiet">Points from in-store purchases appear within a few minutes. Refunds are shown as their own rows and remove the points the purchase earned.</Banner>
     </Shell>
     </OverlayCtx.Provider>
   );
 }
 
-Object.assign(window, { LedgerRow, MovementSheet, PromoBox, GROUPS, PROMOS, HomeScreen, ShopScreen, CardScreen, PointsScreen, PointsHistoryScreen, CATALOGUE, CATEGORIES, LEDGER, CategoryPhotoTile });
+Object.assign(window, { LedgerRow, MovementSheet, PromoBox, GROUPS, PROMOS, HomeScreen, ShopScreen, CardScreen, ProgrammeScreen, PointsScreen, PointsHistoryScreen, CATALOGUE, CATEGORIES, LEDGER, CategoryPhotoTile, EARN_LINE, VALUE_LINE, HOW_POINTS });

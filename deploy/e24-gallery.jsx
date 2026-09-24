@@ -16,7 +16,7 @@ function GuestShop({ overlay }) {
       </div>
       <div className="quiet">
         <ul className="mechanic">
-          <li><i className="ti ti-user-plus"></i><span>Browsing needs no account. A cart, WellPlus points and My card do.</span></li>
+          <li><i className="ti ti-user-plus"></i><span>{`Browsing needs no account. The cart, the wishlist, ${PROGRAMME} and the profile do.`}</span></li>
         </ul>
       </div>
     </Screen>
@@ -39,14 +39,9 @@ function GuestPdp({ overlay }) {
         </div>
         <div style={{display:'flex',alignItems:'baseline',gap:10}}>
           <b style={{fontFamily:'var(--font-numeric,var(--font-ui))',fontSize:26,fontWeight:600}}>{eur(p.price)}</b>
-          <span className="tiny">{p.stock}</span>
+          <span className="tiny">{p.oos ? 'Out of stock' : 'In stock'}</span>
         </div>
         <p className="body" style={{margin:0}}>{p.desc}</p>
-        <div className="quiet">
-          <ul className="mechanic">
-            <li><i className="ti ti-rosette-discount"></i><span>WellPlus members earn {Math.round(p.price)} points on this product. Sign in to collect them.</span></li>
-          </ul>
-        </div>
         <button className="abtn" onClick={()=>{}}>Add to cart</button>
       </div>
     </Screen>
@@ -63,12 +58,12 @@ function AuthPromptSheet({ what = 'a cart', onClose }) {
         <div style={{display:'flex',flexDirection:'column',gap:14,padding:'4px 0 0'}}>
           <div>
             <h3 style={{fontFamily:'var(--font-serif-display)',fontSize:21,fontWeight:500,margin:0}}>An account is needed for {what}</h3>
-            <p className="body" style={{margin:'8px 0 0'}}>Create one in under a minute, or log in. You come straight back to this product, and anything you picked stays in the cart.</p>
+            <p className="body" style={{margin:'8px 0 0'}}>Create one in under a minute, or log in. You come straight back to this product.</p>
           </div>
           <div className="quiet">
             <ul className="mechanic">
-              <li><i className="ti ti-rosette-discount"></i><span>50 welcome points, and one point for every euro after that.</span></li>
-              <li><i className="ti ti-qrcode"></i><span>The QR card replaces the plastic one at the register.</span></li>
+              <li><i className="ti ti-rosette-discount"></i><span>{'50 welcome points. ' + EARN_LINE + '.'}</span></li>
+              <li><i className="ti ti-qrcode"></i><span>Your QR card is always on your phone.</span></li>
             </ul>
           </div>
           <button className="abtn" onClick={()=>nav.go('signup')}>Create an account</button>
@@ -104,7 +99,7 @@ function GuestCartKept() {
       </div>
       <div className="quiet">
         <ul className="mechanic">
-          <li><i className="ti ti-rosette-discount"></i><span>+24 points on this order, added once the pharmacy confirms it.</span></li>
+          <li><i className="ti ti-rosette-discount"></i><span>{earnLine(orderTotals({ rows:[[CATALOG.esterc,1],[CATALOG.magcitrate,1]] }).points)}</span></li>
         </ul>
       </div>
     </Screen>
@@ -135,13 +130,13 @@ function GalleryView({ title, lead, items }) {
 function PushGallery() {
   const [toast, showToast] = useToast();
   return <GalleryView title="Notifications — E4 and the push template"
-    lead="Push is the only loyalty feedback channel in v1: there is no message inbox, so a missed push is only recoverable from the points history. Four categories, one of them locked while an order is open."
+    lead="Push is the only loyalty feedback channel in v1: there is no message inbox, so a missed push is only recoverable from the points history. Three categories. Push bodies carry no personal data (G-07)."
     items={[
-      { label:'E4 — notification settings', caption:'A toggle per push category. Order status push is v2, so there is no transactional category; offers follow the marketing consent from A4.', node:<div style={{position:'relative'}}><NotificationSettingsScreen onToast={showToast} />{toast}</div> },
+      { label:'E4 — notification settings', caption:'Three categories: points and redemptions, offers and news, system. The points toggle says that push is the only place a points confirmation appears.', node:<div style={{position:'relative'}}><NotificationSettingsScreen onToast={showToast} />{toast}</div> },
       { label:'E4 — push denied at OS level', caption:'When the operating system permission is refused, the categories are inert and the screen routes to system settings instead of pretending the toggles work.', node:<NotificationSettingsScreen denied /> },
-      { label:'Push template — points', caption:'Lock-screen template: app name, one-line title carrying the figure, body with the pharmacy and the new balance.', node:<PushLockScreen index={0} /> },
-      { label:'Push template — order', caption:'Transactional push. Same template, no emoji, no urgency, order number in the title.', node:<PushLockScreen index={1} /> },
-      { label:'Push template — campaign', caption:'Campaign push, sent only with marketing consent. Advice first, discount second.', node:<PushLockScreen index={2} /> }
+      { label:'Push template — points', caption:'No name, balance, amount or product in the body. The customer opens the app to see the figure.', node:<PushLockScreen index={0} /> },
+      { label:'Push template — system', caption:'Service notice. Same template, no personal data.', node:<PushLockScreen index={1} /> },
+      { label:'Push template — offers', caption:'Sent only with marketing consent. No product or amount in the body.', node:<PushLockScreen index={2} /> }
     ]} />;
 }
 
@@ -159,7 +154,14 @@ function StatesGallery() {
       { label:'S2 — service unavailable', caption:'P1 screen. Explains what happens to points earned in a pharmacy while the service is down.', node:<MaintenanceScreen /> },
       { label:'D1 — offline but usable', caption:'The QR still scans; the balance is labelled as the last known value with the time it was read, never as current.', node:<CardStateScreen mode="offline" /> },
       { label:'D1 — first generation', caption:'The code is being created and cached. Balance shows an em dash rather than a zero.', node:<CardStateScreen mode="first" /> },
-      { label:'D1 — till redemption still settling', caption:'The cashier already applied the discount; the app balance is refreshing and the confirmation arrives by push.', node:<CardStateScreen mode="pending" /> }
+      { label:'D1 — till redemption still settling', caption:'The cashier already applied the discount; the app balance is refreshing and the confirmation arrives by push.', node:<CardStateScreen mode="pending" /> },
+      { label:'D4 — negative balance', caption:'A refund exceeded the balance. The history says what happened and what happens next.', node:<PointsHistoryScreen negative /> },
+      { label:'S-02 — loyalty service down, cart', caption:'Shopping keeps working. The points line says points are temporarily unavailable; promotion labels are left out without a message.', node:<CheckoutFlow fixed={1} loyaltyDown /> },
+      { label:'S-02 — loyalty service down, review', caption:'The redemption switch is disabled with its reason. The order can still be placed.', node:<CheckoutFlow fixed={5} loyaltyDown initial={{payment:'wspay'}} /> },
+      { label:'C5 — mixed cart', caption:'One item earns no points. The conditional line is computed once on the total after discounts, and the note explains the difference.', node:<CheckoutFlow fixed={1} product="klompe" /> },
+      { label:'C8 — WSPay in our own webview', caption:'Our header with a cancel button around the WSPay page. The customer picks the method there.', node:<CheckoutFlow fixed={5} initial={{payment:'wspay', sub:'provider'}} /> },
+      { label:'C8 — waiting for payment confirmation', caption:'Shown after the WSPay step. Aircash and PayCek add the countdown.', node:<CheckoutFlow fixed={5} initial={{payment:'wspay', sub:'awaiting', wsMethod:'aircash'}} /> },
+      { label:'C8 — payment declined', caption:'Processor error in our own screen, in Croatian, with retry and another method.', node:<CheckoutFlow fixed={5} initial={{payment:'wspay', sub:'failed'}} /> }
     ]} />;
 }
 
@@ -197,25 +199,27 @@ function ListErrorDemo() {
 }
 
 function ReviewGallery() {
-  return <GalleryView title="Review — the three redemption states, the coupon and per-step editing"
-    lead="C9 carries one decision about points, but three different balances change what it may say. The terms checkbox now blocks the order, each step summary has an edit link, and the coupon field is back."
+  return <GalleryView title="Review — the points switch states (C-12)"
+    lead="C9 carries one decision about points. The balance, the payment method and the loyalty service change what it may say. Coupon field and per-step Edit links stay."
     items={[
-      { label:'Below the threshold — visible, inactive', caption:'The switch stays on screen with its own reason: 60 points so far, redemption starts at 100. Worded differently from the bank-transfer block, because it is a different problem.', node:<CheckoutFlow fixed={5} balance={60} initial={{payment:'card'}} /> },
-      { label:'Points worth more than the order', caption:'Only the part that fits is spent and the remainder is stated, so the total falls to €0,00 and the CTA becomes Confirm order — no card is charged.', node:<CheckoutFlow fixed={5} balance={6000} initial={{payment:'card',redeem:true}} /> },
-      { label:'Redemption removed on the way back', caption:'Switching to bank transfer on C8 turns the redemption off. The discount never disappears silently — Review says so on return.', node:<CheckoutFlow fixed={5} balance={6000} dropped initial={{payment:'bank'}} /> },
-      { label:'Terms, coupon and edit links', caption:'B-07: the order cannot be placed until the terms box is ticked. The coupon field is collapsed by default, and Address, Delivery and Payment each link back to their step.', node:<CheckoutFlow fixed={5} initial={{payment:'card'}} /> }
+      { label:'Below 100 points — disabled, with reason', caption:'60 points so far. The switch stays on screen and says how many points are still needed.', node:<CheckoutFlow fixed={5} balance={60} initial={{payment:'wspay'}} /> },
+      { label:'Points worth more than the order', caption:'Only the part that fits is spent; the remainder stays on the balance and is stated.', node:<CheckoutFlow fixed={5} balance={6000} initial={{payment:'wspay',redeem:true}} /> },
+      { label:'Order fully covered by points', caption:'0,00 € to pay. The button becomes Confirm order and no payment step follows.', node:<CheckoutFlow fixed={5} balance={4700} initial={{payment:'card',redeem:true}} /> },
+      { label:'Disabled with bank transfer', caption:'The payment is settled later, so points cannot be combined with it. The reason is on the switch.', node:<CheckoutFlow fixed={5} initial={{payment:'bank'}} /> },
+      { label:'Redemption removed on the way back', caption:'Switching to bank transfer on C8 turns the redemption off. Review says so on return.', node:<CheckoutFlow fixed={5} balance={6000} dropped initial={{payment:'bank'}} /> },
+      { label:'Points partly used', caption:'The switch is on and the earn line changes: a purchase paid for with points does not earn new points.', node:<CheckoutFlow fixed={5} initial={{payment:'wspay',redeem:true}} /> }
     ]} />;
 }
 
 function GuestGallery() {
   const [sheet, setSheet] = React.useState(true);
   return <GalleryView title="Guest — browsing without an account"
-    lead="An unauthenticated visitor reaches the Shop, the catalogue and the PDP. Cart, checkout, My card, Points and Profile are gated, and the prompt returns the visitor to where they were with the cart intact."
+    lead={`An unauthenticated visitor reaches the Shop, the catalogue and the PDP. Cart, wishlist, ${PROGRAMME} and Profile ask for sign-in and return the visitor to where they were.`}
     items={[
       { label:'Guest shop', caption:'The catalogue is fully browsable. The cart icon is present but the action is gated, so nothing is hidden from the visitor.', node:<GuestShop /> },
-      { label:'Guest PDP', caption:'Full product page, including what WellPlus would have earned on it — the one place the programme is sold to a non-member.', node:<GuestPdp /> },
-      { label:'Authentication required', caption:'Raised by any protected action: add to cart, My card, Points, Profile. Two routes out, plus "Keep browsing" so the prompt is never a dead end.', node:<GuestPdp overlay={sheet ? <AuthPromptSheet what="a cart" onClose={()=>setSheet(false)} /> : null} /> },
-      { label:'Cart survived registration', caption:'After A3 → A5 → A6 the visitor lands back on the cart with the same two products, and the order now earns points.', node:<GuestCartKept /> }
+      { label:'Guest PDP', caption:'Full product page. No points are shown on product pages (G-04).', node:<GuestPdp /> },
+      { label:'Authentication required', caption:`Raised by any protected action: add to cart, heart, the ${PROGRAMME} tab, Profile. Two routes out, plus "Keep browsing" so the prompt is never a dead end.`, node:<GuestPdp overlay={sheet ? <AuthPromptSheet what="a cart" onClose={()=>setSheet(false)} /> : null} /> },
+      { label:'Cart survived registration', caption:'After A3 → A5 → A6 the visitor lands back on the cart with the same two products. The points line uses the conditional form.', node:<GuestCartKept /> }
     ]} />;
 }
 

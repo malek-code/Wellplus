@@ -73,3 +73,5 @@
 .gsheet .close{all:unset;cursor:pointer;position:absolute;top:14px;right:16px;display:flex;color:var(--text-faint)}
 .gsheet .close:hover{color:var(--text-brand)}
 .phone.hasnav .etoast{bottom:94px}
+
+.pushcard .pico[data-mark="type"]{font-family:var(--font-sans);font-weight:700;font-size:12px;letter-spacing:-.01em;color:var(--sage-600)}

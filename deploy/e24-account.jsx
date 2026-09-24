@@ -1,12 +1,12 @@
 const { Banner: ABanner, Switch: ASwitch, Field: AField, TextInput: ATextInput } = window.E24WellPlusDesignSystem_54c90b;
 
+/* E5 — change password and biometrics only (E-04). */
 function SecurityScreen() {
   const nav = useNav();
   const [bio, setBio] = React.useState(true);
   const [pw, setPw] = React.useState(false);
   const [saved, setSaved] = React.useState(false);
   const [form, setForm] = React.useState({ current:'', next:'', again:'' });
-  const [del, setDel] = React.useState(false);
   const set = (k,v) => setForm(f=>({...f,[k]:v}));
   return (
     <Shell title="Security & sign-in" onBack={nav.back}>
@@ -26,9 +26,8 @@ function SecurityScreen() {
           <a href="#" onClick={e=>{e.preventDefault();setSaved(false);setPw(true);}}><span style={{display:'flex',alignItems:'center',gap:12}}><i className="ti ti-lock"></i>Change password</span><i className="ti ti-chevron-right"></i></a>
         </div>
       )}
-      {saved ? <ABanner tone="info" icon="check">Password updated. You stay signed in on this device; other devices will ask for the new password.</ABanner> : null}
-
-      <SecLabel>Signing in</SecLabel>
+      {saved ? <ABanner tone="info" icon="check">Password updated. You stay signed in on this device.</ABanner> : null}
+      <SecLabel>Biometrics</SecLabel>
       <div className="card" style={{display:'flex',flexDirection:'column',gap:0}}>
         <div className="secrow last">
           <span>
@@ -38,66 +37,45 @@ function SecurityScreen() {
           <ASwitch checked={bio} label="Face ID unlock" onChange={setBio} />
         </div>
       </div>
+    </Shell>
+  );
+}
 
+/* E7 — sign out and account deletion. Deletion and data export are requests (E-05). */
+function AccountScreen() {
+  const nav = useNav();
+  const [del, setDel] = React.useState(false);
+  const [delSent, setDelSent] = React.useState(false);
+  const [exportSent, setExportSent] = React.useState(false);
+  return (
+    <Shell title="Sign out and delete account" onBack={nav.back}>
+      <SecLabel>Sign out</SecLabel>
+      <button className="ghostbtn" onClick={()=>{ localStorage.removeItem('e24-session'); nav.set(['onboarding']); }}><i className="ti ti-logout" style={{fontSize:17}}></i>Sign out</button>
+      <SecLabel>My data</SecLabel>
+      {exportSent
+        ? <ABanner tone="info" icon="check">Your request for a copy of your data has been received and will be processed. The copy is sent to iva.jurasin@primjer.hr.</ABanner>
+        : <button className="ghostbtn" onClick={()=>setExportSent(true)}>Request a copy of my data</button>}
       <hr className="rule" />
-      <div className="dangerblock">
-        <div className="t">Delete account</div>
-        <p className="s">Deleting removes your profile, addresses and payment methods, and closes your WellPlus membership — 1.247 unspent points are lost and cannot be restored. Invoices for past orders are kept for as long as Croatian law requires.</p>
-        <button className="dangerbtn" onClick={()=>setDel(true)}>Delete my account</button>
-      </div>
-
+      {delSent ? (
+        <ABanner tone="info" icon="check">Your request to delete the account has been received and will be processed. We will confirm by email to iva.jurasin@primjer.hr.</ABanner>
+      ) : (
+        <div className="dangerblock">
+          <div className="t">Delete account</div>
+          <p className="s">{`Deleting removes your profile and addresses and closes your ${PROGRAMME} membership. Unspent points are lost and cannot be restored.`}</p>
+          <button className="dangerbtn" onClick={()=>setDel(true)}>Request account deletion</button>
+        </div>
+      )}
       {del ? (
-        <Modal icon="alert-triangle" title="Delete your account?" lead="This cannot be undone. Spend your points before you go — 1.247 points are worth €12,47." onClose={()=>setDel(false)} cta="Keep my account">
+        <Modal icon="alert-triangle" title="Delete your account?" lead="The request cannot be undone once it is processed. Spend your points before you go." onClose={()=>setDel(false)} cta="Keep my account">
           <ul className="mechanic">
-            <li><i className="ti ti-user-off"></i><span>Profile, addresses and saved cards are deleted.</span></li>
-            <li><i className="ti ti-rosette-discount-off"></i><span>WellPlus membership closes and unspent points are lost.</span></li>
-            <li><i className="ti ti-file-invoice"></i><span>Invoices are kept for the statutory retention period.</span></li>
+            <li><i className="ti ti-user-off"></i><span>Profile and addresses are deleted.</span></li>
+            <li><i className="ti ti-rosette-discount-off"></i><span>{`${PROGRAMME} membership closes and unspent points are lost.`}</span></li>
           </ul>
-          <button className="dangerbtn" onClick={()=>setDel(false)}>Yes, delete my account</button>
+          <button className="dangerbtn" onClick={()=>{ setDel(false); setDelSent(true); }}>Send deletion request</button>
         </Modal>
       ) : null}
     </Shell>
   );
 }
 
-function AboutScreen() {
-  const nav = useNav();
-  return (
-    <Shell title="About" onBack={nav.back}>
-      <div className="card" style={{padding:20,display:'flex',flexDirection:'column',alignItems:'center',gap:6,textAlign:'center'}}>
-        <span style={{fontFamily:'var(--font-serif-display)',fontSize:30,fontWeight:500,color:'var(--text-body)',lineHeight:1}}>e24</span>
-        <span className="tiny">by Ljekarne Švaljek</span>
-        <span className="microlabel" style={{marginTop:8}}>Version 1.0 (build 104)</span>
-      </div>
-
-      <SecLabel>The app</SecLabel>
-      <div className="quiet">
-        <p className="body" style={{margin:0}}>e24 is the app of Ljekarne Švaljek: the full pharmacy webshop, and WellPlus — the loyalty programme that turns every €1 you spend into 1 point across 21 pharmacies, eljekarna24.hr, Centar zdravih rješenja and this app.</p>
-      </div>
-      <div className="card" style={{display:'flex',flexDirection:'column',gap:0}}>
-        <div className="kvrow"><span>Points earned per €1</span><b>1</b></div>
-        <div className="kvrow"><span>Value of 100 points</span><b>€1</b></div>
-        <div className="kvrow last"><span>Points expiry</span><b>Never</b></div>
-      </div>
-
-      <SecLabel>Legal</SecLabel>
-      <div className="rowlist">
-        {[['Terms of use','file-text','terms'],['Privacy policy','shield-lock','privacy'],['Open source licences','license','licences']].map(([label,icon,route])=>(
-          <a key={label} href="#" onClick={e=>{e.preventDefault();nav.go(route);}}><span style={{display:'flex',alignItems:'center',gap:12}}><i className={'ti ti-'+icon}></i>{label}</span><i className="ti ti-chevron-right"></i></a>
-        ))}
-      </div>
-
-      <SecLabel>Company</SecLabel>
-      <div className="card" style={{display:'flex',flexDirection:'column',gap:0}}>
-        <div className="kvrow"><span>Registered name</span><b>Ljekarne Švaljek</b></div>
-        <div className="kvrow"><span>Seat</span><b>Marija Bistrica, Croatia</b></div>
-        <div className="kvrow"><span>Pharmacies</span><b>21</b></div>
-        <div className="kvrow last"><span>Group</span><b>Salvus Health</b></div>
-      </div>
-      <button className="ghostbtn" onClick={()=>nav.go('contact')}><i className="ti ti-message" style={{fontSize:17}}></i>Contact us</button>
-      <p className="tiny" style={{textAlign:'center',margin:'2px 0 0'}}>Food supplements are not a substitute for a varied diet. For medicines, ask your pharmacist.</p>
-    </Shell>
-  );
-}
-
-Object.assign(window, { SecurityScreen, AboutScreen });
+Object.assign(window, { SecurityScreen, AccountScreen });

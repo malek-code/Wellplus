@@ -9,8 +9,17 @@
 
   const dict = () => window.E24_HR || {};
   const rules = () => window.E24_HR_RULES || [];
+  /* G-01: the programme name is {P} in the dictionary and window.PROGRAMME on screen. */
+  const P = () => window.PROGRAMME || 'Wellplus';
+  const toKey = t => t.split(P()).join('{P}');
+  const fromKey = t => t.split('{P}').join(P());
   const lookup = raw => {
+    const r = lookupKey(raw);
+    return r == null ? null : fromKey(r);
+  };
+  const lookupKey = raw0 => {
     const d = dict();
+    const raw = toKey(raw0);
     const t = raw.trim();
     if (!t) return null;
     if (d[t]) return raw.replace(t, d[t]);

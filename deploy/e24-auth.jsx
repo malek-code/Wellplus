@@ -1,11 +1,12 @@
+/* A2. No in-store stock or pick-up promises (G-08), no expiry (G-06), economics per G-03. */
 const ONBOARDING = [
-  { eyebrow:'The pharmacy, in your pocket', title:'Everything from 21 pharmacies, ordered from here', body:'Browse the full e24 range, check what is in stock near you, and choose delivery to your door or to a parcel locker.', art:'assets/splash-products.jpg' },
-  { eyebrow:'WellPlus', title:'One point for every euro,\nin every channel', body:'Earn on the app, both webshops and at the register. Points never expire, and 100 points are worth €1 off your next order.', art:'assets/splash-products.jpg' },
-  { eyebrow:'Your card', title:'Leave the plastic card at home', body:'Show the QR code at the till and your points are added on the spot. The same balance, the same discount, no card to carry.', art:'assets/splash-products.jpg' }
+  { title:'The pharmacy range, ordered from here', body:'Browse the full e24 range and choose delivery to your door or to a parcel locker.' },
+  { title:'Every euro spent earns 1 point,\nin every channel', body:'Earn in the app, on both webshops and at the register. 100 points = 1 euro off.' },
+  { title:'Your card, on your phone', body:'Show the QR code at the register and your points are added within a few minutes.' }
 ];
 const SLIDE_MS = 4200;
 
-const LangStore = { lang:'en', subs:new Set(),
+const LangStore = { lang:'hr', subs:new Set(),
   set(v){ this.lang = v; this.subs.forEach(f=>f()); },
   sub(f){ this.subs.add(f); return ()=>this.subs.delete(f); } };
 function useLang(){
@@ -70,7 +71,8 @@ function SplashScreen({ onDone }) {
       <div className="splash">
         <Tendril />
         <div className="marks">
-          <img className="splashlogo" src="assets/wellplus-logo.png" alt="WellPlus" />
+          <span className="splashword" aria-label="e24">e24</span>
+          <span className="splashname">{PROGRAMME}</span>
         </div>
         <span className="sub">Ljekarne Švaljek</span>
         <div className="loadrange"><span style={{width:(p*100)+'%'}}></span></div>
@@ -134,7 +136,7 @@ function LoginScreen({ onBack, onForgot, onSignup, onDone }) {
       <div className="authbody">
         <div className="ahead">
           <h1>Welcome back</h1>
-          <p>Log in to see your WellPlus balance, your orders and your saved addresses.</p>
+          <p>Log in to see your points, your orders and your saved addresses.</p>
         </div>
         <AuthField label="Email" icon="mail" value={email} onChange={v=>{setEmail(v);setErr('');}} placeholder="ime@primjer.hr" error={err} autoFocus />
         <AuthField label="Password" type="password" icon="lock" value={pw} onChange={setPw} placeholder="••••••••" />
@@ -142,7 +144,7 @@ function LoginScreen({ onBack, onForgot, onSignup, onDone }) {
       </div>
       <div className="authfoot" data-lift="true">
         <button className="abtn" onClick={submit} disabled={!email || !pw}>Log in</button>
-        <span className="aswitch">New to e24? <button className="alink" onClick={onSignup}>Create an account</button></span>
+        <span className="aswitch">{`New to ${PROGRAMME}?`} <button className="alink" onClick={onSignup}>Create an account</button></span>
       </div>
     </AuthShell>
   );
@@ -154,6 +156,7 @@ function SignupScreen({ onBack, onLogin, onDone, onLegal }) {
   const [terms, setTerms] = React.useState(false);
   const [privacy, setPrivacy] = React.useState(false);
   const [marketing, setMarketing] = React.useState(false);
+  const [dob, setDob] = React.useState('');
   const rules = [
     { label:'At least 8 characters', ok: pw.length >= 8 },
     { label:'One number', ok: /\d/.test(pw) }
@@ -165,7 +168,7 @@ function SignupScreen({ onBack, onLogin, onDone, onLegal }) {
       <div className="authbody">
         <div className="ahead">
           <h1>Create your account</h1>
-          <p>Your WellPlus membership starts with the account — points from the register are added to the same balance.</p>
+          <p>{`Your ${PROGRAMME} membership starts with the account. Points from the register are added to the same balance.`}</p>
         </div>
         <AuthField label="Email" icon="mail" value={email} onChange={setEmail} placeholder="ime@primjer.hr" autoFocus />
         <AuthField label="Password" type="password" icon="lock" value={pw} onChange={setPw} placeholder="Choose a password" />
@@ -174,11 +177,12 @@ function SignupScreen({ onBack, onLogin, onDone, onLegal }) {
             <span key={r.label} data-ok={r.ok}><i className={'ti ti-' + (r.ok ? 'circle-check' : 'circle')}></i>{r.label}</span>
           ))}
         </div>
+        <AuthField label="Date of birth (optional)" icon="cake" value={dob} onChange={setDob} placeholder="DD.MM.YYYY." help="Add it to receive 50 bonus points on your birthday." />
         <MicroLabel style={{marginTop:4}}>required</MicroLabel>
-        <label className="consent"><input type="checkbox" checked={terms} onChange={e=>setTerms(e.target.checked)} /><span>I accept the <a href="#terms" onClick={e=>{e.preventDefault();onLegal&&onLegal('terms');}}>terms of use</a> and the WellPlus programme rules.</span></label>
+        <label className="consent"><input type="checkbox" checked={terms} onChange={e=>setTerms(e.target.checked)} /><span>I accept the <a href="#terms" onClick={e=>{e.preventDefault();onLegal&&onLegal('terms');}}>terms of use</a> {` and the ${PROGRAMME} programme rules.`}</span></label>
         <label className="consent"><input type="checkbox" checked={privacy} onChange={e=>setPrivacy(e.target.checked)} /><span>I have read the <a href="#privacy" onClick={e=>{e.preventDefault();onLegal&&onLegal('privacy');}}>privacy policy</a> and agree to my data being processed as described in it.</span></label>
         <MicroLabel style={{marginTop:6}}>optional</MicroLabel>
-        <label className="consent"><input type="checkbox" checked={marketing} onChange={e=>setMarketing(e.target.checked)} /><span>Send me pharmacist advice and WellPlus news, by email and push. You can turn this off at any time in <a href="#notifications" onClick={e=>{e.preventDefault();onLegal&&onLegal('notifications');}}>notification settings</a>.</span></label>
+        <label className="consent"><input type="checkbox" checked={marketing} onChange={e=>setMarketing(e.target.checked)} /><span>Send me pharmacist advice and news, by email and push. You can turn this off at any time in <a href="#notifications" onClick={e=>{e.preventDefault();onLegal&&onLegal('notifications');}}>notification settings</a>.</span></label>
       </div>
       <div className="authfoot" data-lift="true">
         <button className="abtn" onClick={onDone} disabled={!ready}>Create account</button>
@@ -241,7 +245,7 @@ function NewPasswordScreen({ onBack, onDone }) {
       <div className="authbody">
         <div className="ahead">
           <h1>Set a new password</h1>
-          <p>Choose a password you have not used on e24 before. You stay logged in on this device afterwards.</p>
+          <p>Choose a password you have not used before. You stay logged in on this device afterwards.</p>
         </div>
         <AuthField label="New password" type="password" icon="lock" value={pw} onChange={setPw} placeholder="New password" autoFocus />
         <div className="pwrules">

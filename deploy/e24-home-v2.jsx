@@ -3,7 +3,7 @@ const COLLECTIONS = [
     title:'Hygiene and protection', desc:'Surface disinfection and gloves for the home medicine cabinet.',
     keys:['salvusept','vitalcollagen','zinc'] },
   { id:'skincare', photo:'2761-mtbo96vm-ld1y.jpg', fallback:[62,104,140], wash:'#34526a',
-    title:'New in skincare', desc:'Recent additions for skin, hair and nails — all in stock.',
+    title:'New in skincare', desc:'Recent additions for skin, hair and nails.',
     keys:['magcitrate','omega3','betacarotene'] },
   { id:'immunity', photo:'2149080570-mtboeft4-ygty.jpg', fallback:[226,213,197], wash:'#655643',
     title:'Immunity essentials', desc:'The three our pharmacists reach for first when the cold months start.',
@@ -15,7 +15,7 @@ const rgbToHex = ([r,g,b]) => '#' + [r,g,b].map(v=>v.toString(16).padStart(2,'0'
 
 const POINTS = 1247;
 const fmtPts = n => n.toLocaleString('de-DE');
-const pointsLine = n => n <= 0 ? 'No points yet — every €1 you spend earns 1 point.'
+const pointsLine = n => n <= 0 ? 'No points yet. Every euro spent earns 1 point.'
   : n < 100 ? 'You have ' + fmtPts(n) + ' points. ' + fmtPts(100 - n) + ' more to your first €1.'
   : 'You have ' + fmtPts(n) + ' points ready to spend.';
 
@@ -124,104 +124,14 @@ function CollectionRail() {
   );
 }
 
-const AGAIN_SHORT = { esterc:'Imuno Boost', d3:'Kids Imuno', omega3:'SHINE ON+', calmag:'Energija', selenium:'Apivit', magcitrate:'Collagen' };
-const AGAIN_SETS = [
-  { id:'again-1', date:'12 Aug', keys:['esterc'] },
-  { id:'again-2', date:'4 Aug', keys:['omega3','d3'] },
-  { id:'again-3', date:'19 Jul', keys:['esterc','d3','omega3'], gone:['omega3'] }
-];
 const priceOf = s => parseFloat(String(s).replace('€','').replace('.','').replace(',','.'));
 const eurStr = n => '€' + n.toFixed(2).replace('.', ',');
 
-const againItems = s => s.keys.map(k => (window.CATALOGUE || []).find(p => p.key === k)).filter(Boolean);
-const againAvailable = s => againItems(s).filter(p => !(s.gone || []).includes(p.key));
-const againTotal = s => againAvailable(s).reduce((t,p)=>t+priceOf(p.price), 0);
-const againFullLabel = items => items.length === 1 ? items[0].name : items.map(p => AGAIN_SHORT[p.key] || p.name).join(' + ');
-
-function BuyAgainSheet({ set, onClose, onAdd }) {
-  const nav = useNav();
-  const items = againItems(set);
-  const avail = againAvailable(set);
-  return (
-    <div className="scrim" onClick={onClose}>
-      <div className="agsheet" role="dialog" aria-modal="true" aria-label={againFullLabel(items)} onClick={e=>e.stopPropagation()}>
-        <span className="aghandle"></span>
-        <button className="close" onClick={onClose} aria-label="Close"><i className="ti ti-x"></i></button>
-        <h3>{againFullLabel(items)}</h3>
-        <p className="agdate">Ordered {set.date}</p>
-        <div className="clines">
-          {items.map((p,i,a)=>{
-            const gone = (set.gone || []).includes(p.key);
-            return (
-              <div className={'cline' + (gone ? '' : ' tap')} key={p.key} data-last={i === a.length-1 ? 'true' : undefined}
-                role={gone ? undefined : 'button'} tabIndex={gone ? undefined : 0}
-                onClick={gone ? undefined : ()=>{onClose();nav.go('shopflow:'+p.key);}}>
-                <span className="cthumb"><img src={p.image} alt="" /></span>
-                <span className="cinfo">
-                  <span className="nm">{p.name}</span>
-                  <span className="sz">{p.size}</span>
-                </span>
-                <span className={gone ? 'agunavail' : 'agrowpr'}>{gone ? 'No longer available' : p.price}</span>
-              </div>
-            );
-          })}
-        </div>
-        <div className="agtotal"><span>Total</span><b>{eurStr(againTotal(set))}</b></div>
-        <button className="cta" onClick={()=>{onAdd(avail);onClose();}}>{avail.length === 1 ? 'Add item to cart' : 'Add all ' + avail.length + ' items to cart'}</button>
-      </div>
-    </div>
-  );
-}
-
-function BuyAgainRail({ onOpen }) {
-  const nav = useNav();
-  const railRef = React.useRef(null);
-  const find = k => (window.CATALOGUE || []).find(p => p.key === k);
-  const sets = AGAIN_SETS.map(s => ({ ...s, items: s.keys.map(find).filter(Boolean) })).filter(s => s.items.length === s.keys.length);
-  const totalOf = s => s.items.filter(p => !(s.gone || []).includes(p.key)).reduce((t,p)=>t+priceOf(p.price), 0);
-  if (!sets.length) return null;
-  const labelFor = items => {
-    if (items.length === 1) return items[0].name;
-    const joined = items.map(p => AGAIN_SHORT[p.key] || p.name).join(' + ');
-    return joined.length > 21 ? items.length + ' products' : joined;
-  };
-  return (
-    <React.Fragment>
-      <SecLabel>Buy again</SecLabel>
-      <div className="againwrap">
-      <div className="againrail" ref={railRef}>
-        {sets.map(s=>(
-          <div className="againcard" key={s.id}>
-            <button className="agtap" onClick={()=>onOpen(s.id)} aria-label={'Buy again: ' + labelFor(s.items)}>
-              <span className="agmosaic" data-n={s.items.length}>
-                {s.items.map(p=><span className="agcell" key={p.key}><img src={p.image} alt="" /></span>)}
-              </span>
-              <span className="agtext">
-                <span className="agnm">{labelFor(s.items)}</span>
-                <span className="agpr">{eurStr(totalOf(s))}{s.items.length > 1 ? <span className="agcount">{s.items.length} items</span> : null}</span>
-              </span>
-            </button>
-          </div>
-        ))}
-      </div>
-      </div>
-    </React.Fragment>
-  );
-}
-
+/* B1. One balance line, no loyalty widget (B-01). Rails and hero cards are BigCommerce
+   categories curated by the client; no Buy again, no personalised rails (B-02). */
 function HomeScreenV2() {
   const nav = useNav();
   const cartCount = useCartCount();
-  const [toast, setToast] = React.useState(null);
-  const [openSet, setOpenSet] = React.useState(null);
-  const toastTimer = React.useRef(null);
-  React.useEffect(()=>()=>clearTimeout(toastTimer.current), []);
-  const addToCart = items => {
-    items.forEach(it => window.CartStore.add(typeof it === 'string' ? it : (it.name || 'Item')));
-    setToast(items.length === 1 ? '1 item added to your cart' : items.length + ' items added to your cart');
-    clearTimeout(toastTimer.current);
-    toastTimer.current = setTimeout(()=>setToast(null), 3000);
-  };
   const G = window.GROUPS, byKeys = ks => ks.map(k => window.CATALOGUE.find(p => p.key === k)).filter(Boolean);
   const shelf = (title, items, extraTop) => (
     <React.Fragment>
@@ -238,7 +148,7 @@ function HomeScreenV2() {
         <div className="appbar" style={{justifyContent:'flex-end'}}>
           <AppActions>
             <AppIcon icon="search" label="Search" onClick={()=>nav.go('search')} />
-            <span className="cartbump" data-bump={toast ? 'true' : undefined}><AppIcon icon="shopping-cart" label="Cart" badge={cartCount} onClick={()=>nav.go('cart')} /></span>
+            <AppIcon icon="shopping-cart" label="Cart" badge={cartCount || null} onClick={()=>nav.go('cart')} />
           </AppActions>
         </div>
         <div style={{position:'relative',padding:'2px 20px 28px',display:'flex',flexDirection:'column',gap:14}}>
@@ -247,18 +157,16 @@ function HomeScreenV2() {
             <span className="greetsub">{pointsLine(POINTS)}</span>
           </div>
           <CollectionRail />
-          <BuyAgainRail onOpen={setOpenSet} />
           {shelf('Everyday essentials', byKeys(G.essentials.keys), true)}
           {shelf('For mom and baby', byKeys(G.family.keys))}
           {shelf('Autumn immunity', byKeys(G.immunity.keys))}
           {shelf('Skin, hair and nails', byKeys(G.skin.keys))}
         </div>
       </div>
-      {openSet ? <BuyAgainSheet set={AGAIN_SETS.find(s=>s.id===openSet)} onClose={()=>setOpenSet(null)} onAdd={addToCart} /> : null}
-      {toast ? <div className="hometoast">{toast}</div> : null}
       <Nav active="Home" />
+      <WishToast />
     </div>
   );
 }
 
-Object.assign(window, { COLLECTIONS, CollectionCard, CollectionRail, BuyAgainRail, BuyAgainSheet, HomeScreenV2, useWash, washVars, hexToRgb, rgbToHex, POINTS, pointsLine });
+Object.assign(window, { COLLECTIONS, CollectionCard, CollectionRail, HomeScreenV2, useWash, washVars, hexToRgb, rgbToHex, POINTS, pointsLine });

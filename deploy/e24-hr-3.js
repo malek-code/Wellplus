@@ -150,7 +150,7 @@ window.E24_HR_RULES = [
   [/^−([\d.,]+) pts$/, "−$1 bodova"],
   [/^(\d+) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4})$/, "$1. $2 $3."],
   [/^Purchase · (.+)$/, "Kupnja · $1"],
-  [/^Earns (\d+) WellPlus points?$/, "Donosi $1 WellPlus bodova"],
+  [/^Earns (\d+) {P} points?$/, "Donosi $1 {P} bodova"],
   [/^Earns (\d+) points?$/, "Donosi $1 bodova"],
   [/^([\d.,]+) points → €([\d,]+) off$/, "$1 bodova → $2 € popusta"],
   [/^Items \((\d+)\)$/, "Proizvodi ($1)"],

@@ -26,7 +26,7 @@ window.E24_HR = Object.assign(window.E24_HR || {}, {
 ". Open it and your account is complete.":". Otvorite ga i vaš račun je dovršen.",
 "Every purchase at Ljekarne Švaljek turns into a discount you can use whenever you like.":"Svaka kupnja u Ljekarnama Švaljek postaje popust koji možete iskoristiti kada želite.",
 "Ljekarna Švaljek — Ilica 191. Balance 1.273 points.":"Ljekarna Švaljek — Ilica 191. Stanje 1.273 boda.",
-"WellPlus is on hold until you open the link we sent to ana.horvat@primjer.hr. Shopping works normally.":"WellPlus je na čekanju dok ne otvorite link koji smo poslali na ana.horvat@primjer.hr. Kupovina radi normalno.",
+"{P} is on hold until you open the link we sent to ana.horvat@primjer.hr. Shopping works normally.":"{P} je na čekanju dok ne otvorite link koji smo poslali na ana.horvat@primjer.hr. Kupovina radi normalno.",
 "by Ljekarne Švaljek":"Ljekarne Švaljek",
 "e24 by Ljekarne Švaljek · 21 pharmacies · Version 1.0":"e24 by Ljekarne Švaljek · 21 ljekarna · Verzija 1.0",
 "Security & sign-in":"Sigurnost i prijava",

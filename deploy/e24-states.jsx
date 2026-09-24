@@ -25,7 +25,7 @@ function StateBanner({ tone = 'attention', icon = 'mail-exclamation', title, chi
 function UnverifiedBanner({ onVerify }) {
   return (
     <StateBanner title="Confirm your email address" action="Send the link again" onAction={onVerify}>
-      WellPlus is on hold until you open the link we sent to ana.horvat@primjer.hr. Shopping works normally.
+      {`${PROGRAMME} is on hold until you open the link we sent to ana.horvat@primjer.hr. Shopping works normally.`}
     </StateBanner>
   );
 }
@@ -48,7 +48,7 @@ function VerifyEmailScreen({ email = 'ana.horvat@primjer.hr', onVerified, onSkip
         </div>
         <div className="quiet" style={{marginTop:6}}>
           <ul className="mechanic">
-            <li><i className="ti ti-rosette-discount"></i><span>WellPlus stays on hold until the address is confirmed — no points, no QR card.</span></li>
+            <li><i className="ti ti-rosette-discount"></i><span>{`${PROGRAMME} stays on hold until the address is confirmed. No points and no QR card until then.`}</span></li>
             <li><i className="ti ti-shopping-bag"></i><span>You can browse and order in the meantime.</span></li>
           </ul>
         </div>
@@ -75,12 +75,12 @@ function WelcomeBonusScreen({ onDone }) {
         <div className="sent">
           <span className="glyph" style={{width:74,height:74}}><i className="ti ti-rosette-discount-check" style={{fontSize:32}}></i></span>
           <h1>Your account is ready</h1>
-          <p>Welcome to WellPlus, Ana. Your balance starts at</p>
+          <p>{`Welcome to ${PROGRAMME}. Your balance starts at`}</p>
           <div className="bonusfig">
             <b>50</b>
             <MicroLabel>welcome points<span className="tbd">placeholder — amount to confirm</span></MicroLabel>
           </div>
-          <p>One point for every euro spent, in the app, on both webshops and at the register. 100 points are worth €1, from 100 points upward.</p>
+          <p>{EARN_LINE + '. ' + VALUE_LINE + '.'}</p>
         </div>
       </div>
       <div className="authfoot">
@@ -92,10 +92,11 @@ function WelcomeBonusScreen({ onDone }) {
 
 /* ---------- E4 notification settings ---------- */
 
+/* E-03: three categories. "Offers and news" is COPY REVIEW (spec still says "Ponude i novosti e24"). */
 const PUSH_CATEGORIES = [
-  { id:'points', t:'Points and redemptions', s:'Points earned in a pharmacy or on a webshop, and points spent. The only channel that reports them.', on:true,
+  { id:'points', t:'Points and redemptions', s:'Push is the only place a points confirmation appears. You can always check your balance in the points history.', on:true,
     confirm:['Points notifications are on','Points notifications are off'] },
-  { id:'campaigns', t:'Offers and WellPlus news', s:'Campaigns and pharmacist advice. Follows your marketing consent.', on:false,
+  { id:'campaigns', t:'Offers and news', s:'Campaigns and pharmacist advice. Follows your marketing consent.', on:false,
     confirm:['Offers and news notifications are on','Offers and news notifications are off'] },
   { id:'system', t:'System', s:'Service notices about the app: maintenance, outages and changes to the programme.', on:true,
     confirm:['System notifications are on','System notifications are off'] }
@@ -115,10 +116,10 @@ function NotificationSettingsScreen({ denied = false, onToast }) {
     <OverlayCtx.Provider value={toast}>
     <Shell title="Notifications" onBack={()=>nav.back()}>
       {denied
-        ? <StateBanner icon="bell-off" title="Push is switched off for e24" action="Open system settings">Croatia's pharmacy points arrive by push only — there is no message inbox in the app. Turn notifications back on for e24 in your phone settings.</StateBanner>
+        ? <StateBanner icon="bell-off" title={`Push is switched off for ${PROGRAMME}`} action="Open system settings">{`Points confirmations arrive by push only. You can always check your balance in the points history. Turn notifications back on for ${PROGRAMME} in your phone settings.`}</StateBanner>
         : <p className="body" style={{margin:0}}>Push is the only place points are announced. Choose what you want to hear about.</p>}
       <SwitchList items={PUSH_CATEGORIES} values={on} disabled={denied} onToggle={flip} />
-      <p className="tiny">Notifications are delivered by the operating system. e24 cannot send them if push is switched off for the app in your phone settings.</p>
+      <p className="tiny">Notifications are delivered by the operating system. They cannot arrive if push is switched off for the app in your phone settings.</p>
     </Shell>
     </OverlayCtx.Provider>
   );
@@ -126,10 +127,11 @@ function NotificationSettingsScreen({ denied = false, onToast }) {
 
 /* ---------- push lock-screen template ---------- */
 
+/* G-07: no name, balance, amount or product in any push body. */
 const PUSH_SAMPLES = [
-  { cat:'Points and redemptions', title:'+26 points', body:'Ljekarna Švaljek — Ilica 191. Balance 1.273 points.' },
-  { cat:'System', title:'WellPlus is briefly unavailable', body:'Points earned tonight are added once the maintenance finishes.' },
-  { cat:'Offers and WellPlus news', title:'Vitamin D season', body:'Pharmacist advice on dosing through winter, plus 20% off Supradyn Kids Imuno Boost.' }
+  { cat:'Points and redemptions', title:'New points', body:'You have earned new points. Check your balance in the app.' },
+  { cat:'System', title:'Short maintenance', body:'Points earned during maintenance are added once it finishes.' },
+  { cat:'Offers and news', title:'Pharmacist advice', body:'Advice for the winter months. See the offers in the app.' }
 ];
 
 function PushLockScreen({ index = 0 }) {
@@ -142,9 +144,9 @@ function PushLockScreen({ index = 0 }) {
           <span className="ltime">08:14</span>
         </div>
         <div className="pushcard">
-          <span className="pico"><img src="assets/wellplus-mark.png" alt="" /></span>
+          <span className="pico" data-mark="type">e24</span>
           <div className="ptxt">
-            <div className="phead"><b>e24</b><span>now</span></div>
+            <div className="phead"><b>{PROGRAMME}</b><span>now</span></div>
             <div className="ptitle">{s.title}</div>
             <div className="pbody">{s.body}</div>
           </div>
@@ -184,7 +186,7 @@ function PartialBalanceCard() {
       <div className="rows">
         <div className="switchrow">
           <div style={{flex:1,minWidth:0}}>
-            <div className="t">WellPlus</div>
+            <div className="t">{PROGRAMME}</div>
             <div className="s">Refreshing your balance…</div>
           </div>
           <Sk w={64} h={22} r={999} />
@@ -230,11 +232,11 @@ function FullState({ icon, title, body, cta, onCta, ghost, onGhost, active = 'ho
 
 function NoConnectionScreen({ onRetry }) {
   return <FullState icon="wifi-off" title="No connection" onCta={onRetry} cta="Try again"
-    body="We cannot reach e24 right now. My card still works without a connection — the QR code is stored on this phone." />;
+    body={`We cannot reach ${PROGRAMME} right now. Your card still works without a connection. The QR code is stored on this phone.`} />;
 }
 
 function MaintenanceScreen() {
-  return <FullState icon="tool" title="e24 is being updated" active="home"
+  return <FullState icon="tool" title={`${PROGRAMME} is being updated`} active="home"
     body="Ordering is unavailable for a short while. Points earned in a pharmacy during this time are added as soon as the service is back." />;
 }
 
@@ -253,17 +255,17 @@ function ListErrorCard({ onRetry }) {
 function CardStateScreen({ mode = 'offline' }) {
   const first = mode === 'first', pending = mode === 'pending';
   return (
-    <Screen active="card" title="My card">
+    <Screen active="card" title={PROGRAMME}>
       {mode === 'offline' ? <StateBanner icon="wifi-off" tone="quiet" title="Offline">The code below works at the till. The balance is the last value this phone received.</StateBanner> : null}
-      {pending ? <StateBanner icon="clock" tone="quiet" title="A redemption at the till is still settling">The cashier's discount is applied. Your balance here updates as soon as the pharmacy's till reports it.</StateBanner> : null}
+      {pending ? <StateBanner icon="clock" tone="quiet" title="A redemption at the till is still settling">The cashier's discount is applied. Your balance here updates within a few minutes.</StateBanner> : null}
       <div className="card qrcard">
         <div className="qrname">Ana Horvat</div>
         <div className={'qrbox' + (first ? ' gen' : '')}>
           {first ? <div className="genwrap"><Sk w={132} h={132} r={12} /><span>Creating your code…</span></div>
-            : <div className="qrfallback" role="img" aria-label="Your WellPlus QR code"><i className="ti ti-qrcode"></i></div>}
+            : <div className="qrfallback" role="img" aria-label="Your QR code"><i className="ti ti-qrcode"></i></div>}
         </div>
         <div className="qrbal">
-          <MicroLabel>{mode === 'offline' ? 'last known balance' : pending ? 'balance refreshing' : 'wellplus points'}</MicroLabel>
+          <MicroLabel>{mode === 'offline' ? 'last known balance' : pending ? 'balance refreshing' : 'your points'}</MicroLabel>
           <b>{first ? '—' : '1.247'}</b>
           <span>{mode === 'offline' ? 'Updated at 07:52, before the connection dropped.' : pending ? '+41 points from a recent purchase is still processing.' : 'Worth €12,47 at checkout or at the till.'}</span>
         </div>

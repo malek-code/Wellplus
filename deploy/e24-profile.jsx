@@ -1,12 +1,15 @@
 const { ListRow, StatusBadge, Banner, Field, TextInput, Switch, FaqItem, EmptyState } = window.E24WellPlusDesignSystem_54c90b;
 
+/* C-14: all the customer's orders, from the app and from eljekarna24.hr. Status is text only. */
 const ORDERS = [
-  { id:'WP-20826-441', date:'21 Aug 2026', total:'€33,28', status:'On the way', tone:'wait', items:2, points:'0', track:2 },
-  { id:'WP-20812-208', date:'12 Aug 2026', total:'€24,90', status:'Delivered', tone:'ok', items:1, points:'+24', track:3 },
-  { id:'WP-20804-119', date:'4 Aug 2026', total:'€128,40', status:'Delivered', tone:'ok', items:5, points:'+128', track:3 },
-  { id:'WP-20729-076', date:'29 Jul 2026', total:'€18,20', status:'Refunded', tone:'negative', items:1, points:'−18', track:3 }
+  { id:'WP-20826-441', date:'21 Aug 2026', total:'€41,75', status:'On the way', tone:'wait', items:2, points:'0', track:2, channel:'App', tracking:'4109 8823 71' },
+  { id:'WP-20823-310', date:'23 Aug 2026', total:'€26,72', status:'Awaiting payment', tone:'wait', items:1, points:'0', track:0, channel:'App', payment:'bank', bankTotal:26.72,
+    lines:[{ img:'https://cdn11.bigcommerce.com/s-2xoeaz93e6/images/stencil/500x659/products/12149/39788/schulke-mikrozid-af-maramice_220__93135.1779276716.jpg?c=1', name:'Mikrozid maramice za dezinfekciju površina', sub:'1 × €22,40', amt:'€22,40' }],
+    sum:{ items:'€22,40', shipLabel:'DPD to my address', ship:'€4,30', credit:null } },
+  { id:'WP-20812-208', date:'12 Aug 2026', total:'€24,90', status:'Delivered', tone:'ok', items:1, points:'+24', track:3, channel:'App' },
+  { id:'WP-20804-119', date:'4 Aug 2026', total:'€128,40', status:'Delivered', tone:'ok', items:5, points:'+128', track:3, channel:'eljekarna24.hr' },
+  { id:'WP-20729-076', date:'29 Jul 2026', total:'€18,20', status:'Refunded', tone:'negative', items:1, points:'−18', track:3, channel:'App' }
 ];
-const TRACK = ['Order placed','Confirmed by pharmacy','On the way','Delivered'];
 function recordOrder(o) { if (!ORDERS.some(x => x.id === o.id)) ORDERS.unshift(o); return o.id; }
 
 function ProfileScreen() {
@@ -14,8 +17,8 @@ function ProfileScreen() {
   const verified = useVerified();
   const [confirm, setConfirm] = React.useState(false);
   const groups = [
-    { title:'Orders & details', rows:[['My orders','package','orders'],['Personal details','user','personal'],['Delivery addresses','map-pin','addresses'],['Payment methods','credit-card','cards'],['Preferred parcel locker','package','locker'],['Notifications','bell','notifications'],['Consents','checkbox','consents']] },
-    { title:'Support', rows:[['FAQ','help','faq'],['Contact us','message','contact'],['Terms of use','file-text','terms'],['Privacy policy','shield-lock','privacy']] }
+    { title:'Orders & details', rows:[['My orders','package','orders'],['Personal details','user','personal'],['Delivery addresses','map-pin','addresses'],['Notifications','bell','notifications'],['Consents','checkbox','consents']] },
+    { title:'Help and legal', rows:[['FAQ','help','faq'],['Programme rules','rosette-discount','rules'],['Terms of use','file-text','terms'],['Privacy policy','shield-lock','privacy']] }
   ];
   return (
     <Screen active="Profile" title="Profile" action={<React.Fragment>
@@ -47,12 +50,12 @@ function ProfileScreen() {
       <SecLabel>Account</SecLabel>
       <div className="rowlist">
         <a href="#" onClick={e=>{e.preventDefault();nav.go('security');}}><span style={{display:'flex',alignItems:'center',gap:12}}><i className="ti ti-lock"></i>Security &amp; sign-in</span><i className="ti ti-chevron-right"></i></a>
-        <a href="#" onClick={e=>{e.preventDefault();nav.go('about');}}><span style={{display:'flex',alignItems:'center',gap:12}}><i className="ti ti-info-circle"></i>About</span><i className="ti ti-chevron-right"></i></a>
+        <a href="#" onClick={e=>{e.preventDefault();nav.go('account');}}><span style={{display:'flex',alignItems:'center',gap:12}}><i className="ti ti-user-cog"></i>Sign out and delete account</span><i className="ti ti-chevron-right"></i></a>
       </div>
       {confirm ? (
         <div className="card" style={{display:'flex',flexDirection:'column',gap:12}}>
           <div>
-            <div style={{fontSize:14,fontWeight:600,color:'var(--text-body)'}}>Sign out of e24?</div>
+            <div style={{fontSize:14,fontWeight:600,color:'var(--text-body)'}}>{`Sign out of ${PROGRAMME}?`}</div>
             <p className="tiny" style={{marginTop:4}}>Your points and orders stay on your account. You will need your email and password to sign back in.</p>
           </div>
           <div style={{display:'flex',gap:8}}>
@@ -61,7 +64,7 @@ function ProfileScreen() {
           </div>
         </div>
       ) : <button className="ghostbtn" style={{marginTop:4}} onClick={()=>setConfirm(true)}>Sign out</button>}
-      <p className="tiny" style={{textAlign:'center'}}>e24 by Ljekarne Švaljek · 21 pharmacies · Version 1.0</p>
+      <p className="tiny" style={{textAlign:'center'}}>{`${PROGRAMME} · Ljekarne Švaljek · Version 1.0`}</p>
     </Screen>
   );
 }
@@ -81,36 +84,34 @@ function OrdersScreen() {
       {rows.length ? (
         <div className="card">
           {rows.map((o,i,a)=>(
-            <ListRow key={o.id} title={o.id} subtitle={`${o.date} · ${o.items} ${o.items===1?'item':'items'}`} divider={i < a.length-1} chevron
+            <ListRow key={o.id} title={o.id} subtitle={`${o.date} · ${o.channel || 'App'}`} divider={i < a.length-1} chevron
               onClick={()=>nav.go('order:'+o.id)}
               trailing={<span style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:6}}><span className="amt">{o.total}</span><StatusBadge tone={o.tone}>{o.status}</StatusBadge></span>} />
           ))}
         </div>
       ) : (
-        <EmptyState icon="package" title="No orders here" description="Orders you place in the app appear in this list, with the points they earned." />
+        <EmptyState icon="package" title="No orders here" description="Orders from the app and from eljekarna24.hr appear here." />
       )}
-      <p className="tiny">A purchase made in a pharmacy has no order — only its points appear in the app.</p>
+      <p className="tiny">In-store purchases are not orders. They appear in your points history.</p>
     </Shell>
   );
 }
 
 function OrderDetailScreen({ id }) {
   const nav = useNav();
-  const [invoice, setInvoice] = React.useState(false);
   const o = ORDERS.find(x=>x.id===id) || ORDERS[0];
   const lines = o.lines || [
     { img:'https://ljekarnaonline.hr/upload/catalog/product/29021/thumb/supradyn-imuno-boost-vitamin-c-vitamin-d-cink-sume_616942bc7df8b_580x580r.jpg', name:'Supradyn® Imuno Boost', sub:'1 × €19,83', amt:'€19,83' },
     { img:'https://ljekarnaonline.hr/upload/catalog/product/1274/thumb/supradyn-energija-30-tableta_64f068b65820e_580x580r.jpg', name:'Supradyn® Energija', sub:'1 × €21,62', amt:'€21,62' }
   ];
-  const sum = o.sum || { items:'€41,45', shipLabel:'DPD to my address', ship:'€4,30', credit:'−€12,47' };
+  const sum = o.sum || { items:'€41,45', shipLabel:'DPD to my address', ship:'€4,30', credit:'−€4,00' };
+  const bank = o.payment === 'bank' && o.tone === 'wait';
   return (
     <Shell title={o.id} onBack={nav.back} footer={
       <div className="footer">
-        <button className="ghostbtn" onClick={()=>setInvoice(true)}><i className={'ti ti-'+(invoice?'check':'receipt')} style={{fontSize:17}}></i>{invoice ? 'Invoice downloaded' : 'Download invoice'}</button>
         <button className="cta" onClick={()=>nav.tab('home')}><i className="ti ti-home" style={{fontSize:18}}></i>Back to home</button>
       </div>
     }>
-      {invoice ? <Banner tone="info" icon="check">Invoice {o.id}.pdf saved to your device.</Banner> : null}
       <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:12}}>
         <div>
           <div style={{fontFamily:'var(--font-label)',fontSize:11,letterSpacing:'.12em',textTransform:'uppercase',color:'var(--text-faint)'}}>{o.date}</div>
@@ -118,19 +119,17 @@ function OrderDetailScreen({ id }) {
         </div>
         <StatusBadge tone={o.tone}>{o.status}</StatusBadge>
       </div>
-      <div className="card">
-        <div style={{display:'flex',flexDirection:'column',gap:0}}>
-          {TRACK.map((t,i)=>(
-            <div key={t} style={{display:'flex',gap:12,alignItems:'flex-start'}}>
-              <span style={{display:'flex',flexDirection:'column',alignItems:'center',flex:'none'}}>
-                <span style={{width:16,height:16,borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',background:i<=o.track?'var(--sage-500)':'transparent',border:'1.5px solid '+(i<=o.track?'var(--sage-500)':'var(--border-strong)'),color:'#fff',fontSize:9}}>{i<o.track?<i className="ti ti-check"></i>:null}</span>
-                {i < TRACK.length-1 ? <span style={{width:1,height:26,background:i<o.track?'var(--sage-500)':'var(--border-hairline)'}}></span> : null}
-              </span>
-              <span style={{fontSize:13,lineHeight:1.3,paddingBottom:i<TRACK.length-1?14:0,color:i<=o.track?'var(--text-body)':'var(--text-faint)',fontWeight:i===o.track?600:400}}>{t}</span>
-            </div>
-          ))}
+      {o.tracking ? (
+        <div className="card">
+          <div className="kvrow last"><span>Tracking number</span><b style={{fontFamily:'var(--font-label)'}}>{o.tracking}</b></div>
         </div>
-      </div>
+      ) : null}
+      {bank ? (
+        <React.Fragment>
+          <SecLabel>Transfer these details</SecLabel>
+          <BankDetails inline amount={o.bankTotal} reference={o.id.replace(/\D/g,'')} />
+        </React.Fragment>
+      ) : null}
       <SecLabel>Items</SecLabel>
       <div className="card">
         {lines.map((l,i,a)=><ListRow key={l.name} thumb={l.img} title={l.name} subtitle={l.sub} trailing={l.amt} divider={i<a.length-1} />)}
@@ -138,49 +137,42 @@ function OrderDetailScreen({ id }) {
       <div className="card">
         <div className="sum">
           <div className="r"><span>Items</span><b>{sum.items}</b></div>
+          {sum.promo ? <div className="r credit"><span>{sum.promoLabel}</span><b>{sum.promo}</b></div> : null}
           <div className="r"><span>{sum.shipLabel}</span><b>{sum.ship}</b></div>
-          {sum.credit ? <div className="r credit"><span>WellPlus points</span><b>{sum.credit}</b></div> : null}
-          <div className="r total"><span>{o.tone==='negative' ? 'Refunded' : /transfer|awaiting/i.test(o.status) ? 'To pay' : 'Paid'}</span><b>{o.total}</b></div>
+          {sum.credit ? <div className="r credit"><span>{`${PROGRAMME} points`}</span><b>{sum.credit}</b></div> : null}
+          <div className="r total"><span>{o.tone==='negative' ? 'Refunded' : bank ? 'To pay' : 'Paid'}</span><b>{o.total}</b></div>
         </div>
       </div>
       <div className="switchrow">
         <Tendril />
         <div style={{position:'relative'}}>
-          <div className="t">{sum.credit ? 'No points earned' : o.points + ' points'}</div>
-          <div className="s">{o.tone==='negative' ? 'Points earned on this order were removed when the refund was processed.' : sum.credit ? 'Points were used on this order, so it earns no new points.' : 'Earned points are pending until the pharmacy confirms it.'}</div>
+          <div className="t">{sum.credit ? 'No points earned' : bank ? 'Points after payment' : o.points + ' points'}</div>
+          <div className="s">{o.tone==='negative' ? 'Points earned on this order were removed when the refund was processed.' : sum.credit ? NO_EARN_WITH_POINTS : bank ? 'Points are credited when the payment is confirmed.' : o.track >= 3 ? 'Points were credited when the order was completed.' : 'Points are credited once the order is completed.'}</div>
         </div>
       </div>
       <SecLabel>Delivery</SecLabel>
       <div className="quiet">
         <p className="body" style={{whiteSpace:'pre-line'}}>{o.dest || 'Iva Jurašin\nIlica 128, 10000 Zagreb\n+385 91 234 5678'}</p>
-        <hr className="rule" />
-        <p className="tiny">{o.courier || 'Overseas Express · tracking 4109 8823 71'}</p>
       </div>
-      <button className="ghostbtn" onClick={()=>nav.go('contact')}><i className="ti ti-message" style={{fontSize:17}}></i>Something wrong with this order?</button>
     </Shell>
   );
 }
 
 function PersonalDetailsScreen() {
   const nav = useNav();
-  const [form, setForm] = React.useState({ name:'Iva Jurašin', email:'iva.jurasin@primjer.hr', phone:'+385 91 234 5678', dob:'' });
+  const [form, setForm] = React.useState({ name:'Iva Jurašin', email:'iva.jurasin@primjer.hr', phone:'+385 91 234 5678', dob:'14.03.1988.' });
   const [saved, setSaved] = React.useState(false);
   const set = k => e => { setForm({...form, [k]:e.target.value}); setSaved(false); };
   return (
     <Shell title="Personal details" onBack={nav.back} footer={<div className="footer"><button className="cta" onClick={()=>setSaved(true)}>Save changes</button></div>}>
       {saved ? <Banner tone="info" icon="check">Your details are saved.</Banner> : null}
       <div className="card" style={{display:'flex',flexDirection:'column',gap:14}}>
-        <Field label="Name" hint="Taken from your first delivery address. It also appears on your WellPlus card."><TextInput value={form.name} onChange={set('name')} /></Field>
+        <Field label="Name" hint={`Taken from your first delivery address. It also appears on your ${PROGRAMME} card.`}><TextInput value={form.name} onChange={set('name')} /></Field>
         <Field label="Email"><TextInput type="email" value={form.email} onChange={set('email')} /></Field>
         <Field label="Phone"><TextInput type="tel" value={form.phone} onChange={set('phone')} /></Field>
-        <Field label="Date of birth" hint="Optional. Used only for age-restricted products."><TextInput placeholder="DD.MM.YYYY." value={form.dob} onChange={set('dob')} /></Field>
+        <Field label="Date of birth" hint="Optional. Used for your birthday bonus."><TextInput placeholder="DD.MM.YYYY." value={form.dob} onChange={set('dob')} /></Field>
       </div>
-      <SecLabel>Membership</SecLabel>
-      <div className="card">
-        <ListRow title="WellPlus number" subtitle="Shown on your card" trailing="WP-4820-1176" />
-        <ListRow title="Member since" subtitle="First purchase on e24" trailing="2024" divider={false} />
-      </div>
-      <p className="tiny">Changing your email changes the address order confirmations are sent to. Your points balance is not affected.</p>
+      <p className="tiny">Changing your email sends a confirmation link to the new address. The change applies once you open it. Your points balance is not affected.</p>
     </Shell>
   );
 }
@@ -188,49 +180,46 @@ function PersonalDetailsScreen() {
 function ConsentsScreen() {
   const nav = useNav();
   const [on, setOn] = React.useState({ email:true, offers:true });
-  const [req, setReq] = React.useState(false);
   const [toast, showToast] = useToast();
   const rows = [
-    { id:'email', t:'Email about my orders', s:'Confirmations, delivery updates and invoices. Cannot be turned off for orders in progress.' },
-    { id:'offers', t:'Personalised offers', s:'Product suggestions based on what you have bought. Never medical advice.' }
+    { id:'email', t:'Email about my orders', s:'Confirmations and delivery updates. Cannot be turned off for orders in progress.' },
+    { id:'offers', t:'Marketing by email', s:'Offers and news by email. Push notifications are set separately in Notifications.' }
   ];
   const CONFIRM = {
     email: ['Order emails are on', 'Order emails are off — emails for orders in progress still arrive'],
-    offers: ['Personalised offers are on', 'Personalised offers are off']
+    offers: ['Marketing emails are on', 'Marketing emails are off']
   };
   const toggle = (k, v) => { setOn({ ...on, [k]: v }); showToast(CONFIRM[k][v ? 0 : 1]); };
   return (
     <OverlayCtx.Provider value={toast}>
     <Shell title="Consents" onBack={nav.back}>
       <SwitchList items={rows} values={on} onToggle={(it,v)=>toggle(it.id,v)} />
-      <Banner tone="quiet">Withdrawing a consent takes effect immediately. It does not affect your WellPlus membership or your points.</Banner>
-      <button className="ghostbtn" onClick={()=>setReq(true)}>Download my data</button>
-      {req ? <Banner tone="info" icon="check">We will email a copy of your data to iva.jurasin@primjer.hr within 24 hours.</Banner> : null}
+      <Banner tone="quiet">{`Withdrawing a consent takes effect immediately. It does not affect your ${PROGRAMME} membership or your points.`}</Banner>
     </Shell>
     </OverlayCtx.Provider>
   );
 }
 
+/* E8 content page. Editable in BigCommerce. */
 function FaqScreen() {
   const nav = useNav();
   return (
     <Shell title="FAQ" onBack={nav.back}>
-      <SecLabel>WellPlus</SecLabel>
+      <SecLabel>{PROGRAMME}</SecLabel>
       <div className="card">
-        <FaqItem question="How do I earn points?" defaultOpen>Every €1 you spend earns 1 point. Points are earned in all 21 pharmacies, on eljekarna24.hr, at Centar zdravih rješenja and in this app. Show your QR card at the register so an in-store purchase counts.</FaqItem>
-        <FaqItem question="What are my points worth?">100 points = €1. You can redeem from 100 points upward, and there is no upper limit beyond the value of your order.</FaqItem>
-        <FaqItem question="How do I spend them?">In the app, turn on the WellPlus switch at the review step — it applies your whole balance, capped at the order total. In a pharmacy, tell the cashier you would like to use your points.</FaqItem>
-        <FaqItem question="Do points expire?">No. Points never expire, and there is nothing to keep active.</FaqItem>
-        <FaqItem question="Why has my balance not gone up yet?">In-store purchases settle within a few hours. Until then the points show as processing in your activity list.</FaqItem>
-        <FaqItem question="Does a purchase paid with points earn points?" style={{borderBottom:0}}>No. A purchase paid for using points does not earn new points.</FaqItem>
+        <FaqItem question="How do I earn points?" defaultOpen>{EARN_LINE + '. Points are earned in all 21 pharmacies, on eljekarna24.hr, at Centar zdravih rješenja and in this app. Show your QR card at the register so an in-store purchase counts.'}</FaqItem>
+        <FaqItem question="What are my points worth?">{VALUE_LINE + '. You can use them from 100 points upward, up to the value of your order.'}</FaqItem>
+        <FaqItem question="How do I spend them?">In the app, turn on the switch at the review step. In a pharmacy, tell the cashier you would like to use your points.</FaqItem>
+        <FaqItem question="How long are points valid?">Points are valid for 24 months.</FaqItem>
+        <FaqItem question="Why has my balance not gone up yet?">Points from in-store purchases appear within a few minutes. Points from an online order are credited once the order is completed.</FaqItem>
+        <FaqItem question="Does a purchase paid with points earn points?" style={{borderBottom:0}}>{'No. ' + NO_EARN_WITH_POINTS}</FaqItem>
       </div>
       <SecLabel>Orders</SecLabel>
       <div className="card">
         <FaqItem question="Which prescriptions can I order?">Prescription medicines and co-payments are settled in the pharmacy and cannot be paid for in the app.</FaqItem>
-        <FaqItem question="How do I return something?">Contact us within 14 days. Points earned on a returned item are removed when the refund is processed.</FaqItem>
+        <FaqItem question="How do I return something?">Returns follow the terms of use. Points earned on a returned item are removed when the refund is processed.</FaqItem>
         <FaqItem question="Where do you deliver?" style={{borderBottom:0}}>Anywhere in Croatia, by courier to your address or to a parcel locker.</FaqItem>
       </div>
-      <button className="ghostbtn" onClick={()=>nav.go('contact')}><i className="ti ti-message" style={{fontSize:17}}></i>Still stuck? Contact us</button>
     </Shell>
   );
 }

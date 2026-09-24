@@ -438,3 +438,31 @@ div:has(> div > .infosheet){background:#FFFFFF !important;inset:auto 0 0 0 !impo
 .ptsbare .figs{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .ptsbare .num{font-family:var(--font-numeric);font-size:48px;line-height:1;font-weight:500;letter-spacing:.01em;font-variant-numeric:tabular-nums;color:var(--text-body)}
 .ptsbare .eur{font-family:var(--font-numeric);font-size:15px;letter-spacing:.01em;color:var(--text-brand)}
+
+/* 24 Sep alignment: five tabs (N-01), label component (G-12), wishlist heart (F-01) */
+.nav{width:calc(100% - 24px);max-width:none;padding:6px;gap:0}
+.nav a{flex:1 1 0;min-width:0;padding:8px 2px;border-radius:999px}
+.nav .nlabel{white-space:normal;text-align:center;font-size:10.5px;line-height:1.15;max-width:100%}
+.pcard .shot .plabels{position:absolute;top:8px;left:8px;right:40px;z-index:1;display:flex;flex-wrap:wrap;gap:4px}
+.plabel{display:inline-flex;align-items:center;font-family:var(--font-label);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;line-height:1.2;padding:4px 8px;border-radius:999px;background:var(--sage-900);color:#FDFBF7;max-width:100%}
+.plabel[data-kind="prime"]{letter-spacing:.14em}
+.plabel[data-kind="gift"],.plabel[data-kind="recommend"]{background:var(--surface-brand-quiet);color:var(--sage-600)}
+.plabel[data-kind="promo"]{background:transparent;box-shadow:inset 0 0 0 1px var(--border-strong);color:var(--text-body);text-transform:none;letter-spacing:0;font-family:var(--font-sans);font-weight:500;font-size:11px;padding:4px 9px;border-radius:10px;text-wrap:pretty}
+.promoline{display:flex;margin-top:-2px}
+.oosline{font-size:11.5px;color:var(--text-faint);margin-top:-4px}
+.pcard .shot .qtybadge{top:auto;bottom:8px}
+.heartbtn{all:unset;cursor:pointer;position:absolute;top:6px;right:6px;z-index:2;width:30px;height:30px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.86);color:var(--text-secondary);font-size:17px;transition:color var(--dur-fast) var(--ease-standard)}
+.heartbtn:hover,.heartbtn[aria-pressed="true"]{color:var(--sage-600)}
+.heartbtn:active{transform:scale(.985)}
+.heartbtn:focus-visible{outline:2px solid var(--sage-500);outline-offset:2px}
+.pcard .shot .plabels .plabel{font-size:9px}
+.wishline{display:flex;align-items:center;gap:10px}
+.wishopen{all:unset;cursor:pointer;flex:1;min-width:0;display:flex;align-items:center;gap:12px}
+.wishopen:hover .nm{color:var(--text-brand)}
+.wishacts{display:flex;align-items:center;gap:6px;flex:none}
+.wishcart,.wishrm{all:unset;cursor:pointer;width:44px;height:44px;border-radius:999px;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);box-shadow:inset 0 0 0 1px var(--border-hairline)}
+.wishrm{color:var(--sage-600);font-size:19px}
+.wishcart:hover,.wishrm:hover{color:var(--sage-600);box-shadow:inset 0 0 0 1px var(--border-strong)}
+.wishcart:disabled{opacity:.4;cursor:default}
+.iconbtn.heartic{font-size:22px}
+.iconbtn.heartic[aria-pressed="true"]{color:var(--sage-600)}
